@@ -7,115 +7,252 @@ import UserForm from './components/UserForm';
 import PreviewCanvas from './components/PreviewCanvas';
 import ActionControls from './components/ActionControls';
 import { useAppStore } from './store/useAppStore';
-import { Sparkles, Sliders, Layers, Info } from 'lucide-react';
 
 export default function App() {
   const canvasRef = useRef(null);
-  const { format } = useAppStore();
+  const { activeTab, setActiveTab, userName, builderTitle, badgeNumber } = useAppStore();
+
+  const handleShareToX = () => {
+    const caption = 'Just generated my candidate card for Hackers House 2026! 🌴💻';
+    const hashtags = 'FrameInGoa,HHGoa2026';
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      caption
+    )}&hashtags=${encodeURIComponent(hashtags)}`;
+
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-950">
-      
-      {/* Top Header Navigation */}
+    <div className="min-h-screen flex flex-col bg-white text-black font-mono antialiased relative selection:bg-black selection:text-white">
+      {/* TopAppBar & Mobile Bottom Dock */}
       <Navbar />
 
-      {/* Main Single Page Workbench */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      {/* Main Content Area */}
+      <main className="flex-grow flex flex-col relative z-10 pb-24 md:pb-16 pt-8 md:pt-12 px-4 md:px-16 w-full max-w-7xl mx-auto">
         
-        {/* Page Hero Banner */}
-        <div className="text-center mb-8 sm:mb-10 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-cyan-500/30 text-xs font-mono text-cyan-300 mb-3 shadow-inner">
-            <Sparkles className="w-3.5 h-3.5 text-pink-400 animate-pulse" />
-            <span>HH Goa 2026 Shortlisting Task</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-heading font-extrabold text-white tracking-tight leading-tight">
-            Frame & Builder ID <span className="text-gradient-cyan-pink">Generator</span>
-          </h2>
-          <p className="text-sm text-slate-400 mt-2 font-sans">
-            Upload your photo, personalize your builder badge, and instantly generate high-resolution branded graphics ready for X & Discord.
-          </p>
-        </div>
-
-        {/* Workbench Grid Layout: Mobile-first stacked, Desktop side-by-side */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* LEFT COLUMN: Controls & Input Panel (7 cols on lg) */}
-          <div className="lg:col-span-7 space-y-6">
-            
-            {/* Step 1: Format & Theme Selection */}
-            <section className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 backdrop-blur-md space-y-4">
-              <div className="flex items-center gap-2 text-sm font-heading font-bold text-white border-b border-slate-800 pb-2.5">
-                <Layers className="w-4 h-4 text-cyan-400" />
-                <span>Step 1: Choose Graphic Format</span>
+        {/* VIEW 1: LANDING SCREEN */}
+        {activeTab === 'landing' && (
+          <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-12 my-auto items-center">
+            {/* Left Side: Hero Content */}
+            <div className="md:col-span-6 flex flex-col items-start space-y-8">
+              {/* Status Chip */}
+              <div className="inline-flex items-center space-x-2 px-3 py-1 border border-black text-xs">
+                <span className="w-2 h-2 bg-black animate-pulse"></span>
+                <span>&gt; SYSTEM_LIVE</span>
               </div>
-              <FormatSelector />
-            </section>
 
-            {/* Step 2: Photo Upload & Fine-Tuning */}
-            <section className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 backdrop-blur-md space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-                <div className="flex items-center gap-2 text-sm font-heading font-bold text-white">
-                  <Sliders className="w-4 h-4 text-emerald-400" />
-                  <span>Step 2: Upload & Position Photo</span>
+              {/* Headline */}
+              <div className="space-y-4">
+                <div className="inline-block max-w-fit">
+                  <h1 className="text-4xl md:text-6xl font-extrabold leading-none tracking-tight typing-effect">
+                    VIBE_GEN
+                  </h1>
+                </div>
+                <p className="text-lg md:text-xl font-normal text-dark-gray max-w-xl">
+                  Generate your elite candidate card for Hackers House 2026.
+                </p>
+              </div>
+
+              {/* Main CTA */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('create')}
+                  className="inline-flex items-center justify-center px-8 py-4 bg-black text-white border border-black transition-none text-base font-bold hover:bg-white hover:text-black cursor-pointer"
+                >
+                  &gt; execute.buildCard()
+                </button>
+              </div>
+
+              {/* Decorative Data Points */}
+              <div className="grid grid-cols-2 gap-0 w-full max-w-lg border-t border-l border-black mt-8">
+                <div className="flex flex-col items-start p-4 border-b border-r border-black hover:bg-black hover:text-white transition-none group">
+                  <span className="text-2xl font-bold">0.9s</span>
+                  <span className="text-xs mt-2 opacity-70 group-hover:opacity-100">&gt; GEN_TIME</span>
+                </div>
+                <div className="flex flex-col items-start p-4 border-b border-r border-black hover:bg-black hover:text-white transition-none group">
+                  <span className="text-2xl font-bold">10k+</span>
+                  <span className="text-xs mt-2 opacity-70 group-hover:opacity-100">&gt; VIBES_CHECKED</span>
+                </div>
+                <div className="flex flex-col items-start p-4 border-b border-r border-black hover:bg-black hover:text-white transition-none group">
+                  <span className="text-2xl font-bold">99%</span>
+                  <span className="text-xs mt-2 opacity-70 group-hover:opacity-100">&gt; ACCURACY</span>
+                </div>
+                <div className="flex flex-col items-start p-4 border-b border-r border-black hover:bg-black hover:text-white transition-none group">
+                  <span className="text-2xl font-bold text-terminal-red group-hover:text-white">SYS_OK</span>
+                  <span className="text-xs mt-2 opacity-70 group-hover:opacity-100">&gt; STATUS</span>
                 </div>
               </div>
+            </div>
+
+            {/* Right Side: IDE Terminal Box */}
+            <div className="hidden md:flex md:col-span-6 flex-col border border-black bg-white">
+              <div className="border-b border-black px-4 py-2 flex justify-between items-center bg-white text-xs">
+                <span>terminal.exe</span>
+                <span>[ - ] [ + ] [ x ]</span>
+              </div>
+              <div
+                onClick={() => setActiveTab('create')}
+                className="p-12 flex-grow flex flex-col items-center justify-center text-dark-gray text-sm min-h-[360px] border-dashed cursor-pointer hover:bg-black hover:text-white transition-none group text-center space-y-4"
+              >
+                <div className="text-3xl font-bold">// Drop payload here or click to init()</div>
+                <div className="text-xs opacity-70">&gt; Click to launch card generator &gt;&gt;</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* VIEW 2: CREATE WORKBENCH */}
+        {activeTab === 'create' && (
+          <div className="w-full space-y-8">
+            {/* Header Text */}
+            <div className="text-left">
+              <h1 className="text-4xl md:text-5xl font-extrabold text-black mb-2 tracking-tight typing-effect inline-block">
+                &lt;Initialize /&gt;
+              </h1>
+              <p className="text-base text-dark-gray">
+                Enter parameters to generate your developer ID card.
+              </p>
+            </div>
+
+            {/* Grid Layout: Left Inputs, Right Live Canvas */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               
-              <ImageUploader />
-              <ImageAdjuster />
-            </section>
+              {/* LEFT COLUMN: Controls & Input Panel (7 cols on lg) */}
+              <div className="lg:col-span-7 space-y-8">
+                {/* Form Container */}
+                <div className="border border-black p-6 md:p-8 relative bg-white">
+                  <div className="absolute top-0 left-0 w-full border-b border-black bg-white flex items-center justify-between px-4 py-2 text-xs font-light">
+                    <span>init_parameters.config</span>
+                    <div className="flex gap-3">
+                      <span>[ - ]</span>
+                      <span>[ + ]</span>
+                      <span>[ x ]</span>
+                    </div>
+                  </div>
 
-            {/* Step 3: Builder Profile Form (Shown for Format B & PFP customization) */}
-            <section className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 backdrop-blur-md space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-                <div className="flex items-center gap-2 text-sm font-heading font-bold text-white">
-                  <Sparkles className="w-4 h-4 text-pink-400" />
-                  <span>Step 3: Builder Details</span>
+                  <div className="pt-6 space-y-8">
+                    {/* Step 1: Format Selector */}
+                    <div>
+                      <FormatSelector />
+                    </div>
+
+                    {/* Step 2: Image Uploader & Adjuster */}
+                    <div className="space-y-4">
+                      <ImageUploader />
+                      <ImageAdjuster />
+                    </div>
+
+                    {/* Step 3: User Details Form */}
+                    <div>
+                      <UserForm />
+                    </div>
+                  </div>
                 </div>
-                {format === 'PFP' && (
-                  <span className="text-[10px] font-mono text-slate-400">Optional for PFP</span>
-                )}
               </div>
-              <UserForm />
-            </section>
 
+              {/* RIGHT COLUMN: Sticky Live Preview Canvas & Action Buttons (5 cols on lg) */}
+              <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6 flex flex-col items-center">
+                <PreviewCanvas canvasRef={canvasRef} />
+                <ActionControls canvasRef={canvasRef} />
+              </div>
+
+            </div>
           </div>
+        )}
 
-          {/* RIGHT COLUMN: Sticky Live Preview & Action Buttons (5 cols on lg) */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4 flex flex-col items-center">
-            
-            {/* Live Render Canvas */}
-            <div className="w-full p-4 rounded-2xl bg-slate-900/40 border border-slate-800 backdrop-blur-md flex flex-col items-center justify-center">
+        {/* VIEW 3: ID PREVIEW SCREEN */}
+        {activeTab === 'preview' && (
+          <div className="w-full flex flex-col items-center justify-center space-y-8 py-4">
+            <div className="w-full text-center">
+              <h1 className="text-3xl md:text-5xl font-extrabold text-black mb-2 tracking-tight">
+                ID_PREVIEW
+              </h1>
+              <p className="text-sm text-dark-gray">
+                Review your Hackers House credential before minting.
+              </p>
+            </div>
+
+            <div className="w-full max-w-sm">
               <PreviewCanvas canvasRef={canvasRef} />
-              
-              {/* Action Buttons */}
+            </div>
+
+            <div className="w-full max-w-sm">
               <ActionControls canvasRef={canvasRef} />
             </div>
-
-            {/* Quick Tip Box */}
-            <div className="w-full max-w-sm p-3 rounded-xl bg-slate-900/30 border border-slate-800/60 flex items-start gap-2.5 text-xs text-slate-400">
-              <Info className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
-              <span>
-                Tip: Uses client-side HTML5 canvas processing. No image is uploaded to external servers. Your photo stays 100% private in your browser.
-              </span>
-            </div>
-
           </div>
+        )}
 
-        </div>
+        {/* VIEW 4: SUCCESS / EXPORT SCREEN */}
+        {activeTab === 'success' && (
+          <div className="w-full flex flex-col items-center justify-center py-8">
+            <div className="w-full max-w-md bg-white border border-black p-8 md:p-10 flex flex-col items-center text-left relative overflow-hidden">
+              {/* Top Bar Window Controls */}
+              <div className="absolute top-0 left-0 w-full border-b border-black bg-white flex items-center justify-between px-4 py-2 text-xs font-light">
+                <span>export_status.log</span>
+                <div className="flex gap-3">
+                  <span>[ - ]</span>
+                  <span>[ + ]</span>
+                  <span>[ x ]</span>
+                </div>
+              </div>
+
+              <div className="mt-8 w-full flex flex-col items-start">
+                {/* Status Message */}
+                <div className="inline-flex items-center space-x-2 px-3 py-1 border border-black text-xs mb-6">
+                  <span className="w-2 h-2 bg-black animate-pulse"></span>
+                  <span>&gt; [SUCCESS] OUTPUT_GENERATED</span>
+                </div>
+
+                {/* Headlines */}
+                <h1 className="text-2xl md:text-3xl font-extrabold text-black mb-3 tracking-tight">
+                  &gt; READY_FOR_THE_HOUSE
+                </h1>
+                <p className="text-xs text-dark-gray mb-6">
+                  Your candidate card has been generated. See you at Hackers House.
+                </p>
+
+                {/* Card Preview Box */}
+                <div className="w-full border border-black bg-white p-4 mb-6 flex items-center justify-between gap-4">
+                  <div className="flex flex-col text-left">
+                    <span className="text-xs font-bold text-black block mb-1">
+                      CANDIDATE_ID: {badgeNumber || '#0X9F3A'}
+                    </span>
+                    <span className="text-[10px] text-dark-gray block">
+                      NAME: {userName || 'NEO_CODER'} ({builderTitle || 'SYS.ARCHITECT'})
+                    </span>
+                    <span className="text-[10px] font-bold text-black mt-1">
+                      &gt; STATUS: VERIFIED
+                    </span>
+                  </div>
+                  <span className="material-symbols-outlined text-2xl">code_blocks</span>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-col w-full gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('landing')}
+                    className="w-full py-4 bg-black text-white font-bold text-sm border border-black flex justify-center items-center gap-2 hover:bg-white hover:text-black transition-none cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-base">home</span>
+                    &gt; execute.goHome()
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleShareToX}
+                    className="w-full py-4 bg-white text-black font-bold text-sm border border-black flex justify-center items-center gap-2 hover:bg-black hover:text-white transition-none cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-base">share</span>
+                    &gt; execute.shareInvite()
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950 py-6 mt-12 text-center text-xs font-mono text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© 2026 HackerHouse Goa. Built for HH Goa 2026 Shortlisting Task.</p>
-          <p className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
-            <span>Environment: {import.meta.env.VITE_EVENT_NAME || 'HH Goa 2026'}</span>
-          </p>
-        </div>
-      </footer>
-
     </div>
   );
 }

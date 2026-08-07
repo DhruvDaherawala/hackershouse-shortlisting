@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useAppStore } from '../store/useAppStore';
 import { processImageFile } from '../utils/heicHelper';
-import { UploadCloud, Image as ImageIcon, Loader2, Sparkles, X } from 'lucide-react';
 
 export default function ImageUploader() {
   const {
@@ -52,81 +51,79 @@ export default function ImageUploader() {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 font-mono">
       <div className="flex items-center justify-between">
-        <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-400">
-          Upload Photo (JPG, PNG, HEIC)
+        <label className="text-xs text-dark-gray uppercase font-light">
+          // Image Payload Upload:
         </label>
         {!uploadedImage && (
           <button
             type="button"
             onClick={loadDemoPhoto}
-            className="text-xs text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-1 hover:underline"
+            className="text-xs text-black font-bold hover:underline cursor-pointer"
           >
-            <Sparkles className="w-3 h-3" /> Try Sample Avatar
+            &gt; try.sampleAvatar()
           </button>
         )}
       </div>
 
       {uploadedImage ? (
-        <div className="relative p-3 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-between group">
+        <div className="p-4 border border-black bg-white flex items-center justify-between gap-4">
           <div className="flex items-center space-x-3 overflow-hidden">
             <img
               src={uploadedImage}
               alt="Uploaded Preview"
-              className="w-12 h-12 object-cover rounded-lg border border-cyan-500/30 flex-shrink-0"
+              className="w-12 h-12 object-cover border border-black grayscale"
             />
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-white truncate max-w-[180px]">
-                {imageName || 'Uploaded_Photo.jpg'}
+              <p className="text-xs font-bold text-black truncate max-w-[180px]">
+                import &#123; image &#125; from './local-system';
               </p>
-              <p className="text-xs text-emerald-400 font-mono">Ready to process</p>
+              <p className="text-[10px] text-dark-gray truncate">
+                {imageName || 'candidate_payload.png'}
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <div {...getRootProps()} className="cursor-pointer text-xs font-mono px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">
+            <div
+              {...getRootProps()}
+              className="cursor-pointer text-xs px-3 py-1.5 border border-black text-black hover:bg-black hover:text-white transition-none"
+            >
               <input {...getInputProps()} />
-              Change
+              Replace
             </div>
             <button
+              type="button"
               onClick={removePhoto}
               title="Remove photo"
-              className="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition-colors"
+              className="text-xs px-3 py-1.5 border border-black text-black hover:bg-black hover:text-white transition-none"
             >
-              <X className="w-4 h-4" />
+              Remove
             </button>
           </div>
         </div>
       ) : (
         <div
           {...getRootProps()}
-          className={`p-6 rounded-2xl border-2 border-dashed text-center cursor-pointer transition-all duration-200 ${
-            isDragActive
-              ? 'border-cyan-400 bg-cyan-500/10 scale-[1.01]'
-              : 'border-slate-800 hover:border-slate-700 bg-slate-900/30 hover:bg-slate-900/60'
+          className={`p-8 border border-black text-center cursor-pointer transition-none bg-white hover:bg-black hover:text-white group ${
+            isDragActive ? 'bg-black text-white' : ''
           }`}
         >
           <input {...getInputProps()} />
-          
+
           {isProcessingImage ? (
-            <div className="flex flex-col items-center justify-center py-4 space-y-2">
-              <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
-              <p className="text-xs font-mono text-cyan-300">Processing photo (Converting HEIC/JPEG)...</p>
+            <div className="py-4 text-sm font-bold animate-pulse">
+              &gt; PROCESSING_PAYLOAD...
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-2 space-y-2">
-              <div className="w-12 h-12 rounded-full bg-slate-900 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-md">
-                <UploadCloud className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-white">
-                  Drop your photo here, or <span className="text-cyan-400 hover:underline">browse</span>
-                </p>
-                <p className="text-xs text-slate-400 mt-1 font-mono">
-                  Supports portrait, landscape & iPhone HEIC formats
-                </p>
-              </div>
+            <div className="py-2 space-y-2">
+              <p className="text-sm font-bold">
+                // Drop payload here or click to init()
+              </p>
+              <p className="text-xs opacity-70">
+                Supports JPG, PNG, WEBP, HEIC (Auto-converted in browser)
+              </p>
             </div>
           )}
         </div>

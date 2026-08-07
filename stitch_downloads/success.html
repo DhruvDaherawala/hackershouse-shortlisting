@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Success - Vibe Gen</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "white": "#FFFFFF",
+                      "black": "#000000",
+                      "dark-gray": "#333333",
+                      "terminal-red": "#FF0000"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0px",
+                      "lg": "0px",
+                      "xl": "0px",
+                      "full": "0px",
+                      "none": "0px"
+              },
+              "spacing": {
+                      "container-max": "1200px",
+                      "margin-desktop": "40px",
+                      "margin-mobile": "20px",
+                      "gutter": "16px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "label-caps": ["JetBrains Mono"],
+                      "code-sm": ["JetBrains Mono"],
+                      "headline-lg-mobile": ["JetBrains Mono"],
+                      "stats-lg": ["JetBrains Mono"],
+                      "body-md": ["JetBrains Mono"],
+                      "headline-xl": ["JetBrains Mono"],
+                      "headline-lg": ["JetBrains Mono"],
+                      "mono": ["JetBrains Mono", "monospace"]
+              },
+              "fontSize": {
+                      "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                      "code-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                      "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                      "stats-lg": ["24px", { "lineHeight": "1.0", "fontWeight": "700" }],
+                      "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                      "headline-xl": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                      "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Brutalist Reset */
+        * {
+            border-radius: 0 !important;
+            font-family: 'JetBrains Mono', monospace !important;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-white text-black min-h-screen flex flex-col overflow-x-hidden relative font-mono selection:bg-black selection:text-white">
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-20 relative z-10 w-full max-w-container-max mx-auto">
+<!-- Brutalist Container -->
+<div class="w-full max-w-md bg-white border border-black p-8 md:p-10 flex flex-col items-center text-left relative overflow-hidden group">
+<!-- Top Bar Window Controls -->
+<div class="absolute top-0 left-0 w-full border-b border-black bg-white flex items-center px-4 py-2 gap-4 text-xs font-light">
+<span>[ - ]</span>
+<span>[ + ]</span>
+<span>[ x ]</span>
+</div>
+<div class="mt-8 w-full flex flex-col items-start">
+<!-- Status Message -->
+<div class="inline-flex items-center space-x-2 px-3 py-1 border border-black text-xs mb-8">
+<span class="w-2 h-2 bg-black animate-pulse"></span>
+<span>&gt; [SUCCESS] OUTPUT_GENERATED</span>
+</div>
+<!-- Headlines -->
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-black mb-3 tracking-tight font-extrabold">
+<span class="text-black mr-2">&gt;</span>READY_FOR_THE_HOUSE
+            </h1>
+<p class="font-code-sm text-code-sm text-dark-gray mb-8 max-w-xs">
+                Your candidate card has been generated. See you at Hackers House.
+            </p>
+<!-- Card Preview Box -->
+<div class="w-full border border-black bg-white p-4 mb-8 flex items-center gap-4 relative overflow-hidden group-hover:bg-black group-hover:text-white transition-none">
+<img class="w-12 h-12 rounded-none object-cover border border-black grayscale mix-blend-luminosity" data-alt="A small, stylized avatar placeholder image featuring a glowing wireframe geometric shape against a pitch black background, rendered in a crisp, neon-cyan minimalist tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo-chrQdb3CLHUBU6jE93tBxM-HXU8ixKmPmgJvQf202J7xzSQoYi-kVim0KJ1UbUnJNxm0qnT2URwvzJDuAHg89n5tSFNOoEIZnRqqlWycCt8W8T2KhwtDuRdVN_HiCzzO_YAGztbj2AAo5C4LRh2g-c_TXX3qqHhmyalXa_1y3TamRE-xYYV8U7BcIryeI2jBcCR28u2CjfRCAlm6mhat2azbt-SvTZKTrPE9p0N0oEz2qWpvF4ncw"/>
+<div class="flex flex-col text-left">
+<span class="font-label-caps text-label-caps text-black group-hover:text-white block mb-1">CANDIDATE_ID: 0x8F9A</span>
+<span class="font-code-sm text-code-sm text-black group-hover:text-white text-[10px]">&gt; STATUS: VERIFIED</span>
+</div>
+<span class="material-symbols-outlined ml-auto text-black group-hover:text-white">code_blocks</span>
+</div>
+<!-- Actions -->
+<div class="flex flex-col w-full gap-4">
+<button class="w-full py-4 bg-black text-white font-bold text-base border border-black rounded-none flex justify-center items-center gap-2 hover:bg-white hover:text-black transition-none">
+<span class="material-symbols-outlined text-[16px]">home</span>
+                    &gt; execute.goHome()
+                </button>
+<button class="w-full py-4 bg-white text-black font-bold text-base border border-black rounded-none flex justify-center items-center gap-2 hover:bg-black hover:text-white transition-none">
+<span class="material-symbols-outlined text-[16px]">share</span>
+                    &gt; execute.shareInvite()
+                </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

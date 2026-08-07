@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>&lt;App id="hh-goa-26" mode="production" /&gt;</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+              "white": "#FFFFFF",
+              "black": "#000000",
+              "dark-gray": "#333333",
+              "terminal-red": "#FF0000"
+            },
+            "borderRadius": {
+              "none": "0px"
+            },
+            "spacing": {
+              "massive": "4rem"
+            },
+            "fontFamily": {
+              "mono": ["JetBrains Mono", "monospace"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Brutalist Reset */
+        * {
+            border-radius: 0 !important;
+            font-family: 'JetBrains Mono', monospace !important;
+        }
+        
+        /* Terminal Input Reset & Autofill override */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+            -webkit-text-fill-color: #000000 !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+        
+        /* Typing effect for header */
+        .typing-effect {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: .15em solid black;
+            animation: typing 2s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: black; }
+        }
+    </style>
+</head>
+<body class="bg-white text-black min-h-screen relative overflow-x-hidden flex flex-col font-mono">
+<!-- TopAppBar (Web Desktop) -->
+<header class="hidden md:flex justify-between items-center px-8 w-full h-16 border-b border-black sticky top-0 z-50 bg-white">
+<div class="flex items-center gap-4 text-black hover:bg-black hover:text-white transition-none p-2 cursor-pointer border border-transparent hover:border-black">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">terminal</span>
+</div>
+<div class="text-sm font-light tracking-widest text-black">
+            &lt;App id="hh-goa-26" mode="production" /&gt;
+        </div>
+<div class="flex items-center gap-4 text-black hover:bg-black hover:text-white transition-none p-2 cursor-pointer border border-transparent hover:border-black">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-start justify-center p-8 md:p-16 mb-24 md:mb-0 w-full max-w-7xl mx-auto">
+<div class="w-full max-w-3xl">
+<!-- Header Text -->
+<div class="mb-massive text-left">
+<h1 class="text-4xl md:text-6xl font-extrabold text-black mb-4 tracking-tight typing-effect inline-block">&lt;Initialize /&gt;</h1>
+<p class="text-lg text-dark-gray">Enter parameters to generate your developer ID card.</p>
+</div>
+<!-- Form Container -->
+<div class="border border-black p-8 relative overflow-hidden bg-white">
+<!-- Top Bar Window Controls -->
+<div class="absolute top-0 left-0 w-full border-b border-black bg-white flex items-center px-4 py-2 gap-4 text-xs font-light">
+<span>[ - ]</span>
+<span>[ + ]</span>
+<span>[ x ]</span>
+</div>
+<form class="flex flex-col gap-12 relative z-10 mt-8" id="vibe-form" onsubmit="event.preventDefault(); simulateLoading();">
+<!-- Input: Name -->
+<div class="relative flex flex-col group/input">
+<label class="text-sm font-light text-dark-gray mb-2">const builderName = </label>
+<div class="flex items-end border-b-2 border-black pb-2">
+<span class="text-black text-lg mr-3 opacity-100">&gt;</span>
+<input class="bg-transparent text-black text-xl w-full border-none focus:ring-0 p-0 m-0 focus:outline-none placeholder:text-dark-gray placeholder:font-light" placeholder="'John Doe'" required="" type="text"/>
+</div>
+</div>
+<!-- Input: GitHub -->
+<div class="relative flex flex-col group/input">
+<label class="text-sm font-light text-dark-gray mb-2">let githubHandle = </label>
+<div class="flex items-end border-b-2 border-black pb-2">
+<span class="text-black text-lg mr-3 opacity-100">&gt;</span>
+<input class="bg-transparent text-black text-xl w-full border-none focus:ring-0 p-0 m-0 focus:outline-none placeholder:text-dark-gray placeholder:font-light" placeholder="'johndoe_dev'" required="" type="text"/>
+</div>
+</div>
+<!-- Input: Role Selection (Brutalist Toggles) -->
+<div class="flex flex-col">
+<label class="text-sm font-light text-dark-gray mb-4">let stackRole = </label>
+<div class="flex flex-wrap gap-4">
+<label class="cursor-pointer group">
+<input checked="" class="peer sr-only" name="role" type="radio" value="frontend"/>
+<div class="px-6 py-3 border border-black text-lg text-black peer-checked:bg-black peer-checked:text-white transition-none hover:bg-black hover:text-white relative">
+<span class="absolute left-2 hidden group-hover:inline peer-checked:hidden">&gt;</span> 'Frontend'
+                                </div>
+</label>
+<label class="cursor-pointer group">
+<input class="peer sr-only" name="role" type="radio" value="backend"/>
+<div class="px-6 py-3 border border-black text-lg text-black peer-checked:bg-black peer-checked:text-white transition-none hover:bg-black hover:text-white relative">
+<span class="absolute left-2 hidden group-hover:inline peer-checked:hidden">&gt;</span> 'Backend'
+                                </div>
+</label>
+<label class="cursor-pointer group">
+<input class="peer sr-only" name="role" type="radio" value="design"/>
+<div class="px-6 py-3 border border-black text-lg text-black peer-checked:bg-black peer-checked:text-white transition-none hover:bg-black hover:text-white relative">
+<span class="absolute left-2 hidden group-hover:inline peer-checked:hidden">&gt;</span> 'Design'
+                                </div>
+</label>
+<label class="cursor-pointer group">
+<input class="peer sr-only" name="role" type="radio" value="fullstack"/>
+<div class="px-6 py-3 border border-black text-lg text-black peer-checked:bg-black peer-checked:text-white transition-none hover:bg-black hover:text-white relative">
+<span class="absolute left-2 hidden group-hover:inline peer-checked:hidden">&gt;</span> 'Fullstack'
+                                </div>
+</label>
+</div>
+</div>
+<!-- Input: Tech Stack -->
+<div class="relative flex flex-col group/input">
+<label class="text-sm font-light text-dark-gray mb-2">const preferredStack = [</label>
+<div class="flex items-end border-b-2 border-black pb-2">
+<span class="text-black text-lg mr-3 opacity-100">&gt;</span>
+<input class="bg-transparent text-black text-xl w-full border-none focus:ring-0 p-0 m-0 focus:outline-none placeholder:text-dark-gray placeholder:font-light" placeholder="'React', 'Node', 'Python'" type="text"/>
+<span class="text-black text-lg ml-3 opacity-100">]</span>
+</div>
+</div>
+<!-- CTA Button -->
+<button class="mt-8 w-full bg-black text-white text-xl py-6 border border-black transition-none hover:bg-white hover:text-black hover:border-black" id="submit-btn" type="submit">
+<span class="flex items-center justify-center gap-4" id="btn-text">
+                            execute.generateID()
+</span>
+<span class="hidden items-center justify-center gap-4 text-black bg-white border border-black w-full h-full absolute top-0 left-0" id="btn-loading">
+                            &gt; PROCESSING...
+                        </span>
+</button>
+</form>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full px-0 py-0 flex justify-between items-center bg-white border-t border-black z-50">
+<a class="flex-1 flex flex-col items-center justify-center text-black py-4 border-r border-black hover:bg-black hover:text-white transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+</a>
+<a class="flex-1 flex flex-col items-center justify-center text-white bg-black py-4 border-r border-black hover:bg-white hover:text-black transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_box</span>
+</a>
+<a class="flex-1 flex flex-col items-center justify-center text-black py-4 border-r border-black hover:bg-black hover:text-white transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">style</span>
+</a>
+<a class="flex-1 flex flex-col items-center justify-center text-black py-4 hover:bg-black hover:text-white transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">share</span>
+</a>
+</nav>
+<script>
+        function simulateLoading() {
+            const btn = document.getElementById('submit-btn');
+            const textSpan = document.getElementById('btn-text');
+            const loadSpan = document.getElementById('btn-loading');
+
+            // Set loading state
+            textSpan.classList.add('hidden');
+            loadSpan.classList.remove('hidden');
+            loadSpan.classList.add('flex');
+            btn.classList.add('pointer-events-none');
+            btn.classList.add('relative');
+
+            // Reset after simulated delay
+            setTimeout(() => {
+                textSpan.classList.remove('hidden');
+                loadSpan.classList.add('hidden');
+                loadSpan.classList.remove('flex');
+                btn.classList.remove('pointer-events-none');
+                btn.classList.remove('relative');
+                
+                // Success state
+                btn.classList.remove('bg-black', 'text-white');
+                btn.classList.add('bg-white', 'text-black');
+                textSpan.innerHTML = '&gt; [SUCCESS] Output generated in 42ms.';
+                
+                setTimeout(() => {
+                    btn.classList.add('bg-black', 'text-white');
+                    btn.classList.remove('bg-white', 'text-black');
+                    textSpan.innerHTML = 'execute.generateID()';
+                }, 2000);
+            }, 1500);
+        }
+    </script>
+</body></html>

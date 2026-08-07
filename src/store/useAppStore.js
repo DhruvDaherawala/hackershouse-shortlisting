@@ -2,7 +2,11 @@ import { create } from 'zustand';
 import { getRandomTitle } from '../utils/titleGenerator';
 
 export const useAppStore = create((set) => ({
-  // Formats: 'PFP' (Format A: Profile Picture) | 'ID_CARD' (Format B: Builder ID Badge)
+  // Active Navigation View Tab: 'landing' | 'create' | 'preview' | 'success'
+  activeTab: 'create',
+  setActiveTab: (activeTab) => set({ activeTab }),
+
+  // Graphic Format: 'PFP' (Format A: Profile Picture) | 'ID_CARD' (Format B: Builder ID Badge)
   format: 'ID_CARD',
   setFormat: (format) => set({ format }),
 
@@ -34,45 +38,36 @@ export const useAppStore = create((set) => ({
   resetImageTransform: () =>
     set({ imageTransform: { zoom: 1, x: 0, y: 0, rotate: 0 } }),
 
-  // User fields (Format B & PFP details)
-  userName: 'Alex Rivera',
+  // User fields (Brutalist Form)
+  userName: 'NEO_CODER',
   setUserName: (userName) => set({ userName }),
 
-  stackRole: 'Full-Stack',
+  githubHandle: 'johndoe_dev',
+  setGithubHandle: (githubHandle) => set({ githubHandle }),
+
+  stackRole: 'Fullstack',
   setStackRole: (stackRole) => set({ stackRole }),
 
-  builderTitle: 'Chief Prompt Officer',
+  preferredStack: "'React', 'Node', 'Python'",
+  setPreferredStack: (preferredStack) => set({ preferredStack }),
+
+  builderTitle: 'SYS.ARCHITECT',
   setBuilderTitle: (builderTitle) => set({ builderTitle }),
   generateRandomTitle: () => set({ builderTitle: getRandomTitle() }),
 
-  // Theme variant
-  themeColor: 'cyan', // 'cyan' | 'pink' | 'emerald' | 'gold'
-  setThemeColor: (themeColor) => set({ themeColor }),
-
-  // Badge details
-  badgeNumber: `HHG-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+  // Badge ID Number
+  badgeNumber: '#0X9F3A',
 
   // Sample demo photo preset for instant preview
   loadDemoPhoto: () => {
-    // High quality sample avatar SVG string converted to data URL
+    // High contrast black-and-white minimalist avatar
     const demoSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
-      <defs>
-        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#0f172a"/>
-          <stop offset="50%" stop-color="#1e1b4b"/>
-          <stop offset="100%" stop-color="#311042"/>
-        </linearGradient>
-        <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#00f0ff"/>
-          <stop offset="100%" stop-color="#ff007f"/>
-        </linearGradient>
-      </defs>
-      <rect width="400" height="400" fill="url(#bg)"/>
-      <circle cx="200" cy="160" r="70" fill="#1e293b" stroke="url(#neon)" stroke-width="4"/>
-      <path d="M100,340 C100,240 300,240 300,340" fill="#1e293b" stroke="url(#neon)" stroke-width="4"/>
-      <circle cx="200" cy="150" r="45" fill="#334155"/>
-      <polygon points="200,80 230,130 170,130" fill="#00f0ff" opacity="0.6"/>
-      <text x="200" y="380" font-family="sans-serif" font-size="16" fill="#00f0ff" text-anchor="middle" font-weight="bold">SAMPLE BUILDER</text>
+      <rect width="400" height="400" fill="#000000"/>
+      <circle cx="200" cy="160" r="70" fill="#FFFFFF" stroke="#000000" stroke-width="4"/>
+      <path d="M100,340 C100,240 300,240 300,340" fill="#FFFFFF" stroke="#000000" stroke-width="4"/>
+      <circle cx="200" cy="150" r="45" fill="#000000"/>
+      <polygon points="200,80 230,130 170,130" fill="#FFFFFF"/>
+      <text x="200" y="380" font-family="monospace" font-size="16" fill="#FFFFFF" text-anchor="middle" font-weight="bold">> NEO_CODER</text>
     </svg>`;
     const dataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(demoSvg)}`;
     set({ uploadedImage: dataUrl, imageName: 'demo_builder.svg' });
@@ -94,11 +89,12 @@ export const useAppStore = create((set) => ({
       uploadedImage: null,
       imageName: '',
       imageTransform: { zoom: 1, x: 0, y: 0, rotate: 0 },
-      userName: '',
-      stackRole: 'Fullstack Dev',
-      builderTitle: getRandomTitle(),
+      userName: 'NEO_CODER',
+      githubHandle: 'johndoe_dev',
+      stackRole: 'Fullstack',
+      preferredStack: "'React', 'Node', 'Python'",
+      builderTitle: 'SYS.ARCHITECT',
       generatedBase64: null,
       generatedDetails: null,
     }),
 }));
-
