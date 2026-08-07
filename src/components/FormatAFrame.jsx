@@ -2,66 +2,111 @@ import React from 'react';
 import { useAppStore } from '../store/useAppStore';
 
 export default function FormatAFrame() {
-  const {
-    uploadedImage,
-    imageTransform,
-    userName,
-    githubHandle,
-    builderTitle,
-  } = useAppStore();
+  const { uploadedImage, imageTransform, filterStyle, cropMode } = useAppStore();
+
+  const getFilterCSS = (style) => {
+    switch (style) {
+      case 'grayscale':
+        return 'grayscale(100%)';
+      case 'contrast':
+        return 'contrast(135%) brightness(105%)';
+      case 'warm':
+        return 'sepia(45%) contrast(110%)';
+      case 'cool':
+        return 'hue-rotate(180deg) contrast(110%)';
+      case 'vintage':
+        return 'sepia(65%) contrast(120%) brightness(90%)';
+      default:
+        return 'none';
+    }
+  };
+
+  // Determine styling based on cropMode preference
+  const getImageStyling = () => {
+    switch (cropMode) {
+      case 'square':
+        return {
+          width: '85%',
+          height: '85%',
+          objectFit: 'cover',
+          borderRadius: '0%',
+        };
+      case 'circle':
+        return {
+          width: '75%',
+          height: '75%',
+          objectFit: 'cover',
+          borderRadius: '50%',
+        };
+      case 'original':
+      default:
+        return {
+          width: '90%',
+          height: '90%',
+          objectFit: 'contain',
+          borderRadius: '0%',
+        };
+    }
+  };
+
+  const modeStyle = getImageStyling();
 
   return (
-    <div className="relative w-full h-full bg-white text-black border border-black flex flex-col justify-between font-mono select-none overflow-hidden p-0">
-      {/* Top Bar Window Controls */}
-      <div className="border-b border-black bg-white flex justify-between items-center px-4 py-2 text-xs font-light z-20">
-        <span className="font-bold">&lt;HH_GOA_2026 /&gt;</span>
-        <span>[ - ] [ + ] [ x ]</span>
-      </div>
-
-      {/* Main Image Container */}
-      <div className="relative flex-grow bg-white flex items-center justify-center overflow-hidden p-4">
-        {uploadedImage ? (
-          <img
-            src={uploadedImage}
-            alt="PFP User Photo"
-            crossOrigin="anonymous"
-            style={{
-              transform: `scale(${imageTransform.zoom}) translate(${imageTransform.x}px, ${imageTransform.y}px) rotate(${imageTransform.rotate}deg)`,
-              transition: 'transform 0.05s ease-out',
-            }}
-            className="max-w-full max-h-full object-contain grayscale pointer-events-none select-none"
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-center text-dark-gray p-6">
-            <span className="text-2xl font-bold mb-2">// NO_PAYLOAD</span>
-            <span className="text-xs">&gt; import &#123; photo &#125; from './user'</span>
-          </div>
-        )}
-
-        {/* ASCII Corner Brackets Overlay */}
-        <div className="absolute top-2 left-2 text-xs font-bold pointer-events-none">[+]</div>
-        <div className="absolute top-2 right-2 text-xs font-bold pointer-events-none">[+]</div>
-        <div className="absolute bottom-2 left-2 text-xs font-bold pointer-events-none">[+]</div>
-        <div className="absolute bottom-2 right-2 text-xs font-bold pointer-events-none">[+]</div>
-      </div>
-
-      {/* Bottom Overlay Frame Details */}
-      <div className="border-t border-black bg-white p-4 flex justify-between items-end z-20">
-        <div className="flex flex-col">
-          <span className="text-[10px] text-dark-gray uppercase tracking-widest">&gt; CANDIDATE_PFP</span>
-          <h2 className="text-lg font-extrabold uppercase tracking-tight text-black">
-            {userName || 'NEO_CODER'}
-          </h2>
-          <span className="text-xs text-dark-gray mt-0.5">
-            @{githubHandle || 'johndoe_dev'} • {builderTitle || 'SYS.ARCHITECT'}
-          </span>
+    <div
+      className="relative w-full h-full bg-white flex items-center justify-center select-none overflow-hidden"
+      style={{ aspectRatio: '1 / 1' }}
+    >
+      {/* Layer 1: User's uploaded photo (behind frame) */}
+      {uploadedImage ? (
+        <img
+          src={uploadedImage}
+          alt="User Profile Photo"
+          crossOrigin="anonymous"
+          draggable={false}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: modeStyle.width,
+            height: modeStyle.height,
+            objectFit: modeStyle.objectFit,
+            borderRadius: modeStyle.borderRadius,
+            transform: `translate(-50%, -50%) scale(${imageTransform.zoom}) translate(${imageTransform.x}px, ${imageTransform.y}px) rotate(${imageTransform.rotate}deg)`,
+            transformOrigin: 'center center',
+            filter: getFilterCSS(filterStyle),
+            zIndex: 1,
+          }}
+        />
+      ) : (
+        <div
+          className="flex flex-col items-center justify-center text-center text-dark-gray font-mono"
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+          }}
+        >
+          <span className="text-lg font-bold mb-1">// NO_PHOTO</span>
+          <span className="text-[10px]">&gt; Upload your profile pic</span>
         </div>
+      )}
 
-        <div className="border border-black px-2 py-1 text-[10px] font-bold flex items-center gap-1">
-          <span className="w-1.5 h-1.5 bg-black animate-pulse"></span>
-          SYS_OK
-        </div>
-      </div>
+      {/* Layer 2: Transparent frame overlay (on top) */}
+      <img
+        src="/hh-goa-frame.png"
+        alt="Hacker House Goa 2026 Frame"
+        crossOrigin="anonymous"
+        draggable={false}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          zIndex: 2,
+          pointerEvents: 'none',
+        }}
+      />
     </div>
   );
 }

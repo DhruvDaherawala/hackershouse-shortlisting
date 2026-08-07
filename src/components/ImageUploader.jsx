@@ -54,7 +54,7 @@ export default function ImageUploader() {
     <div className="space-y-3 font-mono">
       <div className="flex items-center justify-between">
         <label className="text-xs text-dark-gray uppercase font-light">
-          // Image Payload Upload:
+          // Profile Photo Payload Upload:
         </label>
         {!uploadedImage && (
           <button
@@ -73,14 +73,14 @@ export default function ImageUploader() {
             <img
               src={uploadedImage}
               alt="Uploaded Preview"
-              className="w-12 h-12 object-cover border border-black grayscale"
+              className="w-12 h-12 object-cover border border-black"
             />
             <div className="min-w-0">
               <p className="text-xs font-bold text-black truncate max-w-[180px]">
-                import &#123; image &#125; from './local-system';
+                import &#123; profile_photo &#125; from './local';
               </p>
               <p className="text-[10px] text-dark-gray truncate">
-                {imageName || 'candidate_payload.png'}
+                {imageName || 'profile_payload.png'}
               </p>
             </div>
           </div>
@@ -97,7 +97,7 @@ export default function ImageUploader() {
               type="button"
               onClick={removePhoto}
               title="Remove photo"
-              className="text-xs px-3 py-1.5 border border-black text-black hover:bg-black hover:text-white transition-none"
+              className="text-xs px-3 py-1.5 border border-black text-black hover:bg-black hover:text-white transition-none cursor-pointer"
             >
               Remove
             </button>
@@ -119,7 +119,7 @@ export default function ImageUploader() {
           ) : (
             <div className="py-2 space-y-2">
               <p className="text-sm font-bold">
-                // Drop payload here or click to init()
+                // Drop profile photo here or click to upload
               </p>
               <p className="text-xs opacity-70">
                 Supports JPG, PNG, WEBP, HEIC (Auto-converted in browser)

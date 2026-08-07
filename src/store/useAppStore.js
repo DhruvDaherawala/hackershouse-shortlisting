@@ -1,32 +1,33 @@
 import { create } from 'zustand';
-import { getRandomTitle } from '../utils/titleGenerator';
 
 export const useAppStore = create((set) => ({
   // Active Navigation View Tab: 'landing' | 'create' | 'preview' | 'success'
   activeTab: 'create',
   setActiveTab: (activeTab) => set({ activeTab }),
 
-  // Graphic Format: 'PFP' (Format A: Profile Picture) | 'ID_CARD' (Format B: Builder ID Badge)
-  format: 'ID_CARD',
-  setFormat: (format) => set({ format }),
-
   // Image state
   uploadedImage: null,
   imageName: '',
   isProcessingImage: false,
+  cropMode: 'original', // 'original' (No Auto Crop) | 'square' (Fit Square) | 'circle' (Circle Avatar)
   imageTransform: {
     zoom: 1,
     x: 0,
     y: 0,
     rotate: 0,
   },
+  filterStyle: 'none',
 
   setUploadedImage: (imageUrl, imageName = '') =>
     set({
       uploadedImage: imageUrl,
       imageName: imageName,
+      cropMode: 'original',
       imageTransform: { zoom: 1, x: 0, y: 0, rotate: 0 },
+      filterStyle: 'none',
     }),
+
+  setCropMode: (cropMode) => set({ cropMode }),
 
   setIsProcessingImage: (isProcessingImage) => set({ isProcessingImage }),
 
@@ -38,25 +39,24 @@ export const useAppStore = create((set) => ({
   resetImageTransform: () =>
     set({ imageTransform: { zoom: 1, x: 0, y: 0, rotate: 0 } }),
 
-  // User fields (Brutalist Form)
-  userName: 'NEO_CODER',
-  setUserName: (userName) => set({ userName }),
+  rotateClockwise: () =>
+    set((state) => ({
+      imageTransform: {
+        ...state.imageTransform,
+        rotate: (state.imageTransform.rotate + 90) % 360,
+      },
+    })),
 
-  githubHandle: 'johndoe_dev',
-  setGithubHandle: (githubHandle) => set({ githubHandle }),
+  centerImage: () =>
+    set((state) => ({
+      imageTransform: {
+        ...state.imageTransform,
+        x: 0,
+        y: 0,
+      },
+    })),
 
-  stackRole: 'Fullstack',
-  setStackRole: (stackRole) => set({ stackRole }),
-
-  preferredStack: "'React', 'Node', 'Python'",
-  setPreferredStack: (preferredStack) => set({ preferredStack }),
-
-  builderTitle: 'SYS.ARCHITECT',
-  setBuilderTitle: (builderTitle) => set({ builderTitle }),
-  generateRandomTitle: () => set({ builderTitle: getRandomTitle() }),
-
-  // Badge ID Number
-  badgeNumber: '#0X9F3A',
+  setFilterStyle: (filterStyle) => set({ filterStyle }),
 
   // Sample demo photo preset for instant preview
   loadDemoPhoto: () => {
@@ -67,10 +67,10 @@ export const useAppStore = create((set) => ({
       <path d="M100,340 C100,240 300,240 300,340" fill="#FFFFFF" stroke="#000000" stroke-width="4"/>
       <circle cx="200" cy="150" r="45" fill="#000000"/>
       <polygon points="200,80 230,130 170,130" fill="#FFFFFF"/>
-      <text x="200" y="380" font-family="monospace" font-size="16" fill="#FFFFFF" text-anchor="middle" font-weight="bold">> NEO_CODER</text>
+      <text x="200" y="380" font-family="monospace" font-size="16" fill="#FFFFFF" text-anchor="middle" font-weight="bold">&gt; HH_GOA_2026</text>
     </svg>`;
     const dataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(demoSvg)}`;
-    set({ uploadedImage: dataUrl, imageName: 'demo_builder.svg' });
+    set({ uploadedImage: dataUrl, imageName: 'sample_avatar.svg', cropMode: 'original', filterStyle: 'none' });
   },
 
   // Export & Generated Image State
@@ -88,12 +88,9 @@ export const useAppStore = create((set) => ({
     set({
       uploadedImage: null,
       imageName: '',
+      cropMode: 'original',
       imageTransform: { zoom: 1, x: 0, y: 0, rotate: 0 },
-      userName: 'NEO_CODER',
-      githubHandle: 'johndoe_dev',
-      stackRole: 'Fullstack',
-      preferredStack: "'React', 'Node', 'Python'",
-      builderTitle: 'SYS.ARCHITECT',
+      filterStyle: 'none',
       generatedBase64: null,
       generatedDetails: null,
     }),

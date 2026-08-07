@@ -83,7 +83,7 @@ export const renderComponentToBase64 = async (element, options = {}) => {
     scale: scale,
     useCORS: true,
     allowTaint: true,
-    backgroundColor: '#020617',
+    backgroundColor: '#FFFFFF',
     logging: false,
     imageTimeout: 15000,
     onclone: (clonedDoc) => {

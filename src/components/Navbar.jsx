@@ -18,7 +18,7 @@ export default function Navbar() {
             <span className="material-symbols-outlined text-lg">terminal</span>
           </button>
           <div className="text-xs md:text-sm font-light tracking-tight">
-            &lt;App id="hh-goa-26" mode="production" /&gt;
+            &lt;App id="hh-goa-26-pfp" mode="production" /&gt;
           </div>
         </div>
 
@@ -51,7 +51,7 @@ export default function Navbar() {
           className={`flex-1 flex flex-col items-center justify-center py-3 border-r border-black transition-none ${
             activeTab === 'create' ? 'bg-black text-white' : 'text-black hover:bg-black hover:text-white'
           }`}
-          title="Create Card"
+          title="Create PFP"
         >
           <span className="font-bold text-sm">[+]</span>
           <span className="text-[10px] mt-0.5">Create</span>
@@ -63,7 +63,7 @@ export default function Navbar() {
           className={`flex-1 flex flex-col items-center justify-center py-3 border-r border-black transition-none ${
             activeTab === 'preview' ? 'bg-black text-white' : 'text-black hover:bg-black hover:text-white'
           }`}
-          title="Preview ID"
+          title="Preview PFP"
         >
           <span className="font-bold text-sm">[*]</span>
           <span className="text-[10px] mt-0.5">Preview</span>
@@ -75,7 +75,7 @@ export default function Navbar() {
           className={`flex-1 flex flex-col items-center justify-center py-3 transition-none ${
             activeTab === 'success' ? 'bg-black text-white' : 'text-black hover:bg-black hover:text-white'
           }`}
-          title="Success / Export"
+          title="Export PFP"
         >
           <span className="font-bold text-sm">[&gt;]</span>
           <span className="text-[10px] mt-0.5">Export</span>
