@@ -1,20 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-sans: 'JetBrains Mono', monospace;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'Space Mono', monospace;
   
+  /* Hacker Goa House Color Palette */
+  --color-cream: #FFF8EB;
+  --color-dark-green: #063725;
+  --color-yellow: #FEE101;
+  --color-pink: #E52B50;
   --color-white: #FFFFFF;
-  --color-black: #000000;
-  --color-dark-gray: #333333;
-  --color-terminal-red: #FF0000;
-  --color-terminal-green: #39FF14;
+  --color-dark-gray: #555555;
+  --color-light-border: rgba(6, 55, 37, 0.12);
 }
 
-/* Developer Brutalism Reset */
+/* Base Reset */
 * {
-  border-radius: 0 !important;
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+  background-color: #FFF8EB;
+  color: #063725;
 }
 
 /* Custom Scrollbar */
@@ -24,55 +31,165 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #FFFFFF;
-  border-left: 1px solid #000000;
+  background: #FFF8EB;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #000000;
+  background: #063725;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #333333;
+  background: #0a5a3c;
 }
 
-/* Invert Hover State Utilities */
-.hover-invert {
-  transition: none !important;
+/* Selection */
+::selection {
+  background: #063725;
+  color: #FEE101;
 }
 
-.hover-invert:hover {
-  background-color: #FFFFFF !important;
-  color: #000000 !important;
-  border-color: #000000 !important;
+/* Button Styles */
+.btn-primary {
+  background-color: #063725;
+  color: #FEE101;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(6, 55, 37, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.hover-invert-reverse {
-  transition: none !important;
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(6, 55, 37, 0.25);
 }
 
-.hover-invert-reverse:hover {
-  background-color: #000000 !important;
-  color: #FFFFFF !important;
-  border-color: #000000 !important;
+.btn-primary:active {
+  transform: translateY(0);
 }
 
-/* Typing Caret Effect */
-.typing-effect {
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #063725;
+  border: 2px solid #063725;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #063725;
+  color: #FFF8EB;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Card Container */
+.card-container {
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(6, 55, 37, 0.08);
+  padding: 28px;
+}
+
+/* Hero Chip */
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #FFFFFF;
+  border: 0.6px solid rgba(6, 55, 37, 0.15);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #063725;
+  box-shadow: 0 2px 6px rgba(6, 55, 37, 0.04);
+}
+
+/* Form Styles */
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #063725;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #FFF8EB;
+  border: 1.5px solid rgba(6, 55, 37, 0.15);
+  border-radius: 14px;
+  font-size: 14px;
+  color: #063725;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.form-input:focus {
+  border-color: #063725;
+}
+
+/* Photo Dropzone */
+.photo-dropzone {
+  border: 2px dashed #063725;
+  border-radius: 16px;
+  background: #FFF8EB;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.photo-dropzone:hover {
+  background: rgba(6, 55, 37, 0.04);
+  border-color: #0a5a3c;
+}
+
+.photo-dropzone.active {
+  background: rgba(6, 55, 37, 0.08);
+  border-color: #063725;
+}
+
+/* Preview Card Shadow */
+.preview-card {
+  border-radius: 20px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
   overflow: hidden;
-  white-space: nowrap;
-  border-right: 0.15em solid #000000;
-  animation: typing 1.5s steps(20, end), blink-caret 0.75s step-end infinite;
 }
 
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+/* Toast */
+.toast {
+  background: #063725;
+  color: #FFF8EB;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(6, 55, 37, 0.3);
 }
 
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: #000000; }
+/* Slider Accent */
+input[type="range"] {
+  accent-color: #063725;
 }
 
 /* Terminal Input Reset & Autofill override */
@@ -80,7 +197,111 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #FFFFFF inset !important;
-  -webkit-text-fill-color: #000000 !important;
+  -webkit-box-shadow: 0 0 0 30px #FFF8EB inset !important;
+  -webkit-text-fill-color: #063725 !important;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* Smooth hover transition for nav items */
+.nav-hover {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* ===================== */
+/* LANDING PAGE STYLES   */
+/* ===================== */
+
+/* Dark green hero section with halftone dot pattern */
+.hero-section {
+  background-color: #063725;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(254, 225, 1, 0.12) 1px, transparent 1px);
+  background-size: 16px 16px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ticker / marquee animation */
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  display: flex;
+  animation: tickerScroll 30s linear infinite;
+  width: max-content;
+}
+
+.ticker-container {
+  overflow: hidden;
+  width: 100%;
+  border-top: 2px solid rgba(254, 225, 1, 0.3);
+  border-bottom: 2px solid rgba(254, 225, 1, 0.3);
+}
+
+/* Sticker badges */
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.sticker-pink {
+  background: #E52B50;
+  color: #FFFFFF;
+}
+
+.sticker-yellow {
+  background: #FEE101;
+  color: #063725;
+}
+
+/* Floating bob animation for stickers */
+@keyframes floatBob {
+  0%, 100% { transform: translateY(0) rotate(var(--sticker-rotate, -5deg)); }
+  50% { transform: translateY(-6px) rotate(var(--sticker-rotate, -5deg)); }
+}
+
+.sticker-float {
+  animation: floatBob 3s ease-in-out infinite;
+}
+
+/* Grab cursor when dragging */
+.preview-card:active {
+  cursor: grabbing !important;
 }

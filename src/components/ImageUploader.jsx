@@ -10,7 +10,6 @@ export default function ImageUploader() {
     setUploadedImage,
     isProcessingImage,
     setIsProcessingImage,
-    loadDemoPhoto,
     resetImageTransform,
   } = useAppStore();
 
@@ -51,36 +50,27 @@ export default function ImageUploader() {
   };
 
   return (
-    <div className="space-y-3 font-mono">
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-xs text-dark-gray uppercase font-light">
-          // Profile Photo Payload Upload:
+        <label className="form-label !mb-0">
+          Builder Photo
         </label>
-        {!uploadedImage && (
-          <button
-            type="button"
-            onClick={loadDemoPhoto}
-            className="text-xs text-black font-bold hover:underline cursor-pointer"
-          >
-            &gt; try.sampleAvatar()
-          </button>
-        )}
       </div>
 
       {uploadedImage ? (
-        <div className="p-4 border border-black bg-white flex items-center justify-between gap-4">
+        <div className="p-4 bg-cream rounded-xl flex items-center justify-between gap-4">
           <div className="flex items-center space-x-3 overflow-hidden">
             <img
               src={uploadedImage}
               alt="Uploaded Preview"
-              className="w-12 h-12 object-cover border border-black"
+              className="w-12 h-12 object-cover rounded-lg border border-dark-green/10"
             />
             <div className="min-w-0">
-              <p className="text-xs font-bold text-black truncate max-w-[180px]">
-                import &#123; profile_photo &#125; from './local';
+              <p className="text-sm font-bold text-dark-green truncate max-w-[180px]">
+                Photo uploaded ✓
               </p>
-              <p className="text-[10px] text-dark-gray truncate">
-                {imageName || 'profile_payload.png'}
+              <p className="text-[11px] text-dark-gray truncate">
+                {imageName || 'profile_photo.png'}
               </p>
             </div>
           </div>
@@ -88,7 +78,7 @@ export default function ImageUploader() {
           <div className="flex items-center gap-2">
             <div
               {...getRootProps()}
-              className="cursor-pointer text-xs px-3 py-1.5 border border-black text-black hover:bg-black hover:text-white transition-none"
+              className="cursor-pointer text-xs px-3 py-2 bg-dark-green text-cream font-semibold rounded-lg hover:bg-dark-green/80 transition-colors"
             >
               <input {...getInputProps()} />
               Replace
@@ -97,7 +87,7 @@ export default function ImageUploader() {
               type="button"
               onClick={removePhoto}
               title="Remove photo"
-              className="text-xs px-3 py-1.5 border border-black text-black hover:bg-black hover:text-white transition-none cursor-pointer"
+              className="text-xs px-3 py-2 bg-white text-dark-green font-semibold border border-dark-green/20 rounded-lg hover:bg-pink hover:text-white hover:border-pink transition-colors cursor-pointer"
             >
               Remove
             </button>
@@ -106,25 +96,30 @@ export default function ImageUploader() {
       ) : (
         <div
           {...getRootProps()}
-          className={`p-8 border border-black text-center cursor-pointer transition-none bg-white hover:bg-black hover:text-white group ${
-            isDragActive ? 'bg-black text-white' : ''
+          className={`photo-dropzone flex flex-col items-center gap-3 ${
+            isDragActive ? 'active' : ''
           }`}
         >
           <input {...getInputProps()} />
 
           {isProcessingImage ? (
-            <div className="py-4 text-sm font-bold animate-pulse">
-              &gt; PROCESSING_PAYLOAD...
+            <div className="py-4 text-sm font-bold text-dark-green animate-pulse">
+              ⏳ Processing your photo...
             </div>
           ) : (
-            <div className="py-2 space-y-2">
-              <p className="text-sm font-bold">
-                // Drop profile photo here or click to upload
-              </p>
-              <p className="text-xs opacity-70">
-                Supports JPG, PNG, WEBP, HEIC (Auto-converted in browser)
-              </p>
-            </div>
+            <>
+              <div className="w-12 h-12 rounded-full bg-dark-green/10 flex items-center justify-center text-xl">
+                ⬆️
+              </div>
+              <div className="space-y-1 text-center">
+                <p className="text-sm font-bold text-dark-green">
+                  Drop your photo here or click to browse
+                </p>
+                <p className="text-xs text-dark-gray">
+                  JPG, PNG, WEBP or HEIC • Max 10MB
+                </p>
+              </div>
+            </>
           )}
         </div>
       )}

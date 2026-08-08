@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useAppStore } from '../store/useAppStore';
 
 export default function FormatAFrame() {
-  const { uploadedImage, imageTransform, filterStyle, cropMode } = useAppStore();
+  const { uploadedImage, imageTransform, setImageTransform, filterStyle } = useAppStore();
+  const photoContainerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [initialTransform, setInitialTransform] = useState({ x: 0, y: 0 });
+  const [imgAspectRatio, setImgAspectRatio] = useState(1);
 
   const getFilterCSS = (style) => {
     switch (style) {
@@ -21,72 +26,177 @@ export default function FormatAFrame() {
     }
   };
 
-  // Determine styling based on cropMode preference
-  const getImageStyling = () => {
-    switch (cropMode) {
-      case 'square':
-        return {
-          width: '85%',
-          height: '85%',
-          objectFit: 'cover',
-          borderRadius: '0%',
-        };
-      case 'circle':
-        return {
-          width: '75%',
-          height: '75%',
-          objectFit: 'cover',
-          borderRadius: '50%',
-        };
-      case 'original':
-      default:
-        return {
-          width: '90%',
-          height: '90%',
-          objectFit: 'contain',
-          borderRadius: '0%',
-        };
+  // Detect image natural aspect ratio when image loads
+  const handleImageLoad = (e) => {
+    const { naturalWidth, naturalHeight } = e.target;
+    if (naturalWidth && naturalHeight) {
+      setImgAspectRatio(naturalWidth / naturalHeight);
     }
   };
 
-  const modeStyle = getImageStyling();
+  // Compute maximum drag distance (px) allowed without crossing frame boundary
+  const calculateDragBounds = () => {
+    if (!photoContainerRef.current) return { maxDragX: 0, maxDragY: 0 };
+    const rect = photoContainerRef.current.getBoundingClientRect();
+    const Wc = rect.width;
+    const Hc = rect.height;
+    const zoom = imageTransform.zoom || 1;
+
+    let effectiveZoomX = zoom;
+    let effectiveZoomY = zoom;
+
+    if (imgAspectRatio >= 1) {
+      effectiveZoomX = zoom * imgAspectRatio;
+      effectiveZoomY = zoom;
+    } else {
+      effectiveZoomX = zoom;
+      effectiveZoomY = zoom / imgAspectRatio;
+    }
+
+    const maxDragX = Math.max(0, (Wc * (effectiveZoomX - 1)) / 2);
+    const maxDragY = Math.max(0, (Hc * (effectiveZoomY - 1)) / 2);
+
+    return { maxDragX, maxDragY };
+  };
+
+  // Dynamically clamp image position when zoom level or image aspect ratio changes
+  useEffect(() => {
+    if (!uploadedImage) return;
+    const { maxDragX, maxDragY } = calculateDragBounds();
+    const currentX = imageTransform.x || 0;
+    const currentY = imageTransform.y || 0;
+
+    const clampedX = Math.max(-maxDragX, Math.min(maxDragX, currentX));
+    const clampedY = Math.max(-maxDragY, Math.min(maxDragY, currentY));
+
+    if (clampedX !== currentX || clampedY !== currentY) {
+      setImageTransform({ x: clampedX, y: clampedY });
+    }
+  }, [imageTransform.zoom, imgAspectRatio, uploadedImage]);
+
+  // Initiate drag interaction
+  const startDrag = (clientX, clientY) => {
+    setIsDragging(true);
+    setDragStart({ x: clientX, y: clientY });
+    setInitialTransform({ x: imageTransform.x || 0, y: imageTransform.y || 0 });
+  };
+
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    startDrag(e.clientX, e.clientY);
+  };
+
+  const handleTouchStart = (e) => {
+    if (e.touches && e.touches.length === 1) {
+      startDrag(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  };
+
+  useEffect(() => {
+    const handleMove = (clientX, clientY) => {
+      if (!isDragging) return;
+      const deltaX = clientX - dragStart.x;
+      const deltaY = clientY - dragStart.y;
+
+      const proposedX = initialTransform.x + deltaX;
+      const proposedY = initialTransform.y + deltaY;
+
+      const { maxDragX, maxDragY } = calculateDragBounds();
+
+      const clampedX = Math.max(-maxDragX, Math.min(maxDragX, proposedX));
+      const clampedY = Math.max(-maxDragY, Math.min(maxDragY, proposedY));
+
+      setImageTransform({ x: clampedX, y: clampedY });
+    };
+
+    const onMouseMove = (e) => {
+      handleMove(e.clientX, e.clientY);
+    };
+
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches.length === 1) {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const stopDrag = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', stopDrag);
+      window.addEventListener('touchmove', onTouchMove, { passive: false });
+      window.addEventListener('touchend', stopDrag);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', stopDrag);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', stopDrag);
+    };
+  }, [isDragging, dragStart, initialTransform]);
 
   return (
     <div
       className="relative w-full h-full bg-white flex items-center justify-center select-none overflow-hidden"
       style={{ aspectRatio: '1 / 1' }}
     >
-      {/* Layer 1: User's uploaded photo (behind frame) */}
+      {/* Layer 1: User's uploaded photo (strictly clipped inside the inner frame window) */}
       {uploadedImage ? (
-        <img
-          src={uploadedImage}
-          alt="User Profile Photo"
-          crossOrigin="anonymous"
-          draggable={false}
+        <div
+          ref={photoContainerRef}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          title="Drag image to reposition"
           style={{
             position: 'absolute',
-            top: '50%',
+            top: '47.5%',
             left: '50%',
-            width: modeStyle.width,
-            height: modeStyle.height,
-            objectFit: modeStyle.objectFit,
-            borderRadius: modeStyle.borderRadius,
-            transform: `translate(-50%, -50%) scale(${imageTransform.zoom}) translate(${imageTransform.x}px, ${imageTransform.y}px) rotate(${imageTransform.rotate}deg)`,
-            transformOrigin: 'center center',
-            filter: getFilterCSS(filterStyle),
+            width: '74%',
+            height: '74%',
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             zIndex: 1,
+            cursor: isDragging ? 'grabbing' : 'grab',
+            touchAction: 'none',
           }}
-        />
+        >
+          <img
+            src={uploadedImage}
+            alt="User Profile Photo"
+            crossOrigin="anonymous"
+            draggable={false}
+            onLoad={handleImageLoad}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transform: `translate(${imageTransform.x || 0}px, ${imageTransform.y || 0}px) scale(${imageTransform.zoom || 1})`,
+              transformOrigin: 'center center',
+              filter: getFilterCSS(filterStyle),
+              transition: isDragging ? 'none' : 'transform 0.05s ease-out',
+            }}
+          />
+        </div>
       ) : (
         <div
-          className="flex flex-col items-center justify-center text-center text-dark-gray font-mono"
+          className="flex flex-col items-center justify-center text-center text-dark-gray"
           style={{
             position: 'absolute',
+            top: '47.5%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
             zIndex: 1,
           }}
         >
-          <span className="text-lg font-bold mb-1">// NO_PHOTO</span>
-          <span className="text-[10px]">&gt; Upload your profile pic</span>
+          <span className="text-3xl mb-2">📷</span>
+          <span className="text-sm font-semibold">Upload your photo</span>
         </div>
       )}
 

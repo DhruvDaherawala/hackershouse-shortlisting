@@ -3,25 +3,20 @@ import FormatAFrame from './FormatAFrame';
 
 export default function PreviewCanvas({ canvasRef }) {
   return (
-    <div className="flex flex-col items-center justify-center w-full font-mono">
-      {/* Live Preview Header Bar */}
-      <div className="mb-2 flex items-center justify-between w-full max-w-sm px-1 text-xs">
-        <span className="font-bold text-black">&gt; LIVE_RENDER_CANVAS</span>
-        <span className="text-dark-gray text-[10px]">1:1 Square PFP Frame</span>
+    <div className="flex flex-col items-center justify-center w-full">
+      {/* Live Preview Header */}
+      <div className="mb-3 flex items-center justify-between w-full max-w-sm px-1 text-xs">
+        <span className="font-bold text-dark-green text-sm">Live Preview</span>
+        <span className="text-dark-gray text-[11px] font-medium flex items-center gap-1">🖐️ Drag photo to reposition</span>
       </div>
 
-      {/* Main Outer IDE / Terminal Container Box */}
-      <div className="w-full max-w-sm border border-black bg-white p-0">
-        <div className="border-b border-black px-4 py-2 flex justify-between items-center bg-white text-xs">
-          <span>preview.exe</span>
-          <span>[ - ] [ + ] [ x ]</span>
-        </div>
-
+      {/* Preview Card */}
+      <div className="w-full max-w-sm preview-card bg-white">
         {/* Live Canvas Element for export */}
         <div className="p-4 flex items-center justify-center bg-white">
           <div
             ref={canvasRef}
-            className="relative overflow-hidden bg-white w-full select-none"
+            className="relative overflow-hidden bg-white w-full select-none rounded-lg"
             style={{
               aspectRatio: '1 / 1',
             }}
