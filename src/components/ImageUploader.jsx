@@ -63,7 +63,7 @@ export default function ImageUploader() {
             <img
               src={uploadedImage}
               alt="Uploaded Preview"
-              className="w-12 h-12 object-cover rounded-lg border border-dark-green/10"
+              className="w-12 h-12 object-contain rounded-lg border border-dark-green/10 bg-cream-dark/20"
             />
             <div className="min-w-0">
               <p className="text-sm font-bold text-dark-green truncate max-w-[180px]">

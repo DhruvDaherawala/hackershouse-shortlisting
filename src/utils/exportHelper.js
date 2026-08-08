@@ -116,20 +116,20 @@ export const renderCanvas2D = async (element, options = {}) => {
     const shiftY = (imageTransform.y || 0) * scaleRatio;
 
     const imgAspect = userImg.naturalWidth / userImg.naturalHeight;
-    let coverW = D_out;
-    let coverH = D_out;
+    let containW = D_out;
+    let containH = D_out;
 
     if (imgAspect >= 1) {
-      coverW = D_out * imgAspect;
-      coverH = D_out;
+      containW = D_out;
+      containH = D_out / imgAspect;
     } else {
-      coverW = D_out;
-      coverH = D_out / imgAspect;
+      containW = D_out * imgAspect;
+      containH = D_out;
     }
 
     const zoom = imageTransform.zoom || 1;
-    const drawW = coverW * zoom;
-    const drawH = coverH * zoom;
+    const drawW = containW * zoom;
+    const drawH = containH * zoom;
 
     const drawX = (cx + shiftX) - drawW / 2;
     const drawY = (cy + shiftY) - drawH / 2;

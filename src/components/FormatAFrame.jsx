@@ -42,19 +42,22 @@ export default function FormatAFrame() {
     const Hc = rect.height;
     const zoom = imageTransform.zoom || 1;
 
-    let effectiveZoomX = zoom;
-    let effectiveZoomY = zoom;
+    let baseW = Wc;
+    let baseH = Hc;
 
     if (imgAspectRatio >= 1) {
-      effectiveZoomX = zoom * imgAspectRatio;
-      effectiveZoomY = zoom;
+      baseW = Wc;
+      baseH = Wc / imgAspectRatio;
     } else {
-      effectiveZoomX = zoom;
-      effectiveZoomY = zoom / imgAspectRatio;
+      baseW = Hc * imgAspectRatio;
+      baseH = Hc;
     }
 
-    const maxDragX = Math.max(0, (Wc * (effectiveZoomX - 1)) / 2);
-    const maxDragY = Math.max(0, (Hc * (effectiveZoomY - 1)) / 2);
+    const currentW = baseW * zoom;
+    const currentH = baseH * zoom;
+
+    const maxDragX = Math.max(0, (currentW - Wc) / 2);
+    const maxDragY = Math.max(0, (currentH - Hc) / 2);
 
     return { maxDragX, maxDragY };
   };
@@ -176,7 +179,7 @@ export default function FormatAFrame() {
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
+              objectFit: 'contain',
               transform: `translate(${imageTransform.x || 0}px, ${imageTransform.y || 0}px) scale(${imageTransform.zoom || 1})`,
               transformOrigin: 'center center',
               filter: getFilterCSS(filterStyle),
