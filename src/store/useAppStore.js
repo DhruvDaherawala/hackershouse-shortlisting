@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 export const useAppStore = create((set) => ({
   // Active Navigation View Tab: 'landing' | 'create' | 'preview' | 'success'
-  activeTab: 'create',
+  activeTab: 'landing',
   setActiveTab: (activeTab) => set({ activeTab }),
 
   // Image state

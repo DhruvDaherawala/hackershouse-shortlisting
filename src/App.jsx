@@ -159,21 +159,6 @@ export default function App() {
               #FRAMEINGOA
             </div>
 
-            {/* Sleek Minimalistic Top Chip */}
-            <div className="relative z-10 my-2">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider"
-                style={{
-                  background: 'rgba(254, 225, 1, 0.12)',
-                  border: '1px solid rgba(254, 225, 1, 0.3)',
-                  color: '#FEE101',
-                  fontFamily: "'Space Mono', monospace",
-                  textTransform: 'uppercase',
-                }}
-              >
-                ✨ HH GOA 2026 PFP GENERATOR
-              </span>
-            </div>
-
             {/* Main Center Logo: asset 2.png ("HACKER HOUSE") + asset 3.svg ("गोवा") */}
             <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl mx-auto my-auto px-4 py-6">
               {/* HACKER HOUSE text image (asset 2.png) */}
@@ -239,169 +224,169 @@ export default function App() {
         </div>
       ) : (
 
-      <main className="flex-grow flex flex-col relative z-10 pb-24 md:pb-16 pt-8 md:pt-12 px-4 md:px-16 w-full max-w-7xl mx-auto">{/* END of landing conditional */}
+        <main className="flex-grow flex flex-col relative z-10 pb-24 md:pb-16 pt-8 md:pt-12 px-4 md:px-16 w-full max-w-7xl mx-auto">{/* END of landing conditional */}
 
-        {/* VIEW 2: CREATE WORKBENCH */}
-        {activeTab === 'create' && (
-          <div className="w-full space-y-8 animate-fade-in-up">
-            {/* Header Text */}
-            <div className="text-left">
-              <h1 className="text-3xl md:text-5xl font-extrabold text-dark-green mb-2 tracking-tight">
-                Create Your Frame
-              </h1>
-              <p className="text-base text-dark-gray">
-                Upload and align your photo to generate your framed profile picture.
-              </p>
-            </div>
-
-            {/* Grid Layout: Left Inputs, Right Live Canvas */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* LEFT COLUMN: Controls & Input Panel (7 cols on lg) */}
-              <div className="lg:col-span-7 space-y-6">
-                {/* Controls Container */}
-                <div className="card-container">
-                  <div className="space-y-6">
-                    {/* Image Uploader & Adjuster */}
-                    <ImageUploader />
-                    <ImageAdjuster />
-                  </div>
-                </div>
-              </div>
-
-              {/* RIGHT COLUMN: Sticky Live Preview Canvas & Action Buttons (5 cols on lg) */}
-              <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6 flex flex-col items-center">
-                <PreviewCanvas canvasRef={canvasRef} />
-                <ActionControls canvasRef={canvasRef} />
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* VIEW 3: ID PREVIEW SCREEN */}
-        {activeTab === 'preview' && (
-          <div className="w-full flex flex-col items-center justify-center space-y-8 py-4 animate-fade-in-up">
-            <div className="w-full text-center">
-              <h1 className="text-3xl md:text-5xl font-extrabold text-dark-green mb-2 tracking-tight">
-                Preview Your Frame
-              </h1>
-              <p className="text-sm text-dark-gray">
-                Review your profile photo frame before downloading.
-              </p>
-            </div>
-
-            <div className="w-full max-w-sm">
-              <PreviewCanvas canvasRef={canvasRef} />
-            </div>
-
-            <div className="w-full max-w-sm">
-              <ActionControls canvasRef={canvasRef} />
-            </div>
-          </div>
-        )}
-
-        {/* VIEW 4: SUCCESS / EXPORT SCREEN */}
-        {activeTab === 'success' && (
-          <div className="w-full flex flex-col items-center justify-center py-8 animate-fade-in-up">
-            <div className="card-container w-full max-w-md flex flex-col items-center text-left">
-              <div className="w-full flex flex-col items-start">
-                {/* Status Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-dark-green/10 text-dark-green text-xs font-bold rounded-full mb-6">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span>Success — Frame Generated!</span>
-                </div>
-
-                {/* Headlines */}
-                <h1 className="text-2xl md:text-3xl font-extrabold text-dark-green mb-3 tracking-tight">
-                  🎉 Ready for the House!
+          {/* VIEW 2: CREATE WORKBENCH */}
+          {activeTab === 'create' && (
+            <div className="w-full space-y-8 animate-fade-in-up">
+              {/* Header Text */}
+              <div className="text-left">
+                <h1 className="text-3xl md:text-5xl font-extrabold text-dark-green mb-2 tracking-tight">
+                  Create Your Frame
                 </h1>
-                <p className="text-sm text-dark-gray mb-6">
-                  Your framed profile photo is ready for X, Discord, & GitHub. See you at Hackers House!
+                <p className="text-base text-dark-gray">
+                  Upload and align your photo to generate your framed profile picture.
                 </p>
+              </div>
 
-                {/* Generated Output Image Display */}
-                {generatedBase64 ? (
-                  <div className="w-full mb-6 rounded-2xl overflow-hidden shadow-lg border-2 border-yellow bg-white p-2 flex justify-center">
-                    <img
-                      src={generatedBase64}
-                      alt="Generated HH Goa 2026 PFP"
-                      className="w-full max-w-[320px] aspect-square object-contain rounded-xl"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full mb-6 rounded-2xl overflow-hidden shadow-lg border border-dark-green/10 bg-white p-2 flex justify-center">
-                    <div className="w-full max-w-[320px] aspect-square flex items-center justify-center">
-                      <PreviewCanvas canvasRef={canvasRef} />
+              {/* Grid Layout: Left Inputs, Right Live Canvas */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                {/* LEFT COLUMN: Controls & Input Panel (7 cols on lg) */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Controls Container */}
+                  <div className="card-container">
+                    <div className="space-y-6">
+                      {/* Image Uploader & Adjuster */}
+                      <ImageUploader />
+                      <ImageAdjuster />
                     </div>
                   </div>
-                )}
-
-                {/* Info Card */}
-                <div className="w-full bg-cream rounded-xl p-4 mb-6 flex items-center justify-between gap-4">
-                  <div className="flex flex-col text-left">
-                    <span className="text-xs font-bold text-dark-green block mb-1">
-                      PFP Frame: HH GOA 2026
-                    </span>
-                    <span className="text-[10px] text-dark-gray block">
-                      FORMAT: 1:1 Square (High DPI 1200x1200px)
-                    </span>
-                    <span className="text-[10px] font-bold text-dark-green mt-1">
-                      ✅ STATUS: VERIFIED
-                    </span>
-                  </div>
-                  <div className="text-2xl">🏅</div>
                 </div>
 
-                {/* Actions */}
-                <div className="flex flex-col w-full gap-3">
-                  {/* Download Options */}
-                  <div className="grid grid-cols-2 gap-2 w-full">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (generatedBase64) {
-                          downloadImageInFormat(generatedBase64, 'png', 'HH_Goa_2026_PFP.png');
-                        }
-                      }}
-                      className="btn-primary py-3.5 flex justify-center items-center gap-1.5 cursor-pointer text-sm font-bold"
-                    >
-                      📥 Download PNG
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (generatedBase64) {
-                          downloadImageInFormat(generatedBase64, 'jpeg', 'HH_Goa_2026_PFP.jpg');
-                        }
-                      }}
-                      className="btn-primary py-3.5 flex justify-center items-center gap-1.5 cursor-pointer text-sm font-bold"
-                    >
-                      📥 Download JPG
-                    </button>
+                {/* RIGHT COLUMN: Sticky Live Preview Canvas & Action Buttons (5 cols on lg) */}
+                <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6 flex flex-col items-center">
+                  <PreviewCanvas canvasRef={canvasRef} />
+                  <ActionControls canvasRef={canvasRef} />
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {/* VIEW 3: ID PREVIEW SCREEN */}
+          {activeTab === 'preview' && (
+            <div className="w-full flex flex-col items-center justify-center space-y-8 py-4 animate-fade-in-up">
+              <div className="w-full text-center">
+                <h1 className="text-3xl md:text-5xl font-extrabold text-dark-green mb-2 tracking-tight">
+                  Preview Your Frame
+                </h1>
+                <p className="text-sm text-dark-gray">
+                  Review your profile photo frame before downloading.
+                </p>
+              </div>
+
+              <div className="w-full max-w-sm">
+                <PreviewCanvas canvasRef={canvasRef} />
+              </div>
+
+              <div className="w-full max-w-sm">
+                <ActionControls canvasRef={canvasRef} />
+              </div>
+            </div>
+          )}
+
+          {/* VIEW 4: SUCCESS / EXPORT SCREEN */}
+          {activeTab === 'success' && (
+            <div className="w-full flex flex-col items-center justify-center py-8 animate-fade-in-up">
+              <div className="card-container w-full max-w-md flex flex-col items-center text-left">
+                <div className="w-full flex flex-col items-start">
+                  {/* Status Badge */}
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-dark-green/10 text-dark-green text-xs font-bold rounded-full mb-6">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span>Success — Frame Generated!</span>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleShareToX}
-                    className="btn-secondary w-full py-4 flex justify-center items-center gap-2 cursor-pointer text-base"
-                  >
-                    𝕏 Share to X
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('create')}
-                    className="w-full py-3 bg-cream text-dark-green hover:bg-dark-green/5 rounded-xl font-bold flex justify-center items-center gap-2 cursor-pointer text-sm border border-dark-green/20"
-                  >
-                    ✏️ Edit Frame
-                  </button>
+                  {/* Headlines */}
+                  <h1 className="text-2xl md:text-3xl font-extrabold text-dark-green mb-3 tracking-tight">
+                    🎉 Ready for the House!
+                  </h1>
+                  <p className="text-sm text-dark-gray mb-6">
+                    Your framed profile photo is ready for X, Discord, & GitHub. See you at Hackers House!
+                  </p>
+
+                  {/* Generated Output Image Display */}
+                  {generatedBase64 ? (
+                    <div className="w-full mb-6 rounded-2xl overflow-hidden shadow-lg border-2 border-yellow bg-white p-2 flex justify-center">
+                      <img
+                        src={generatedBase64}
+                        alt="Generated HH Goa 2026 PFP"
+                        className="w-full max-w-[320px] aspect-square object-contain rounded-xl"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full mb-6 rounded-2xl overflow-hidden shadow-lg border border-dark-green/10 bg-white p-2 flex justify-center">
+                      <div className="w-full max-w-[320px] aspect-square flex items-center justify-center">
+                        <PreviewCanvas canvasRef={canvasRef} />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Info Card */}
+                  <div className="w-full bg-cream rounded-xl p-4 mb-6 flex items-center justify-between gap-4">
+                    <div className="flex flex-col text-left">
+                      <span className="text-xs font-bold text-dark-green block mb-1">
+                        PFP Frame: HH GOA 2026
+                      </span>
+                      <span className="text-[10px] text-dark-gray block">
+                        FORMAT: 1:1 Square (High DPI 1200x1200px)
+                      </span>
+                      <span className="text-[10px] font-bold text-dark-green mt-1">
+                        ✅ STATUS: VERIFIED
+                      </span>
+                    </div>
+                    <div className="text-2xl">🏅</div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-col w-full gap-3">
+                    {/* Download Options */}
+                    <div className="grid grid-cols-2 gap-2 w-full">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (generatedBase64) {
+                            downloadImageInFormat(generatedBase64, 'png', 'HH_Goa_2026_PFP.png');
+                          }
+                        }}
+                        className="btn-primary py-3.5 flex justify-center items-center gap-1.5 cursor-pointer text-sm font-bold"
+                      >
+                        📥 Download PNG
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (generatedBase64) {
+                            downloadImageInFormat(generatedBase64, 'jpeg', 'HH_Goa_2026_PFP.jpg');
+                          }
+                        }}
+                        className="btn-primary py-3.5 flex justify-center items-center gap-1.5 cursor-pointer text-sm font-bold"
+                      >
+                        📥 Download JPG
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleShareToX}
+                      className="btn-secondary w-full py-4 flex justify-center items-center gap-2 cursor-pointer text-base"
+                    >
+                      𝕏 Share to X
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('create')}
+                      className="w-full py-3 bg-cream text-dark-green hover:bg-dark-green/5 rounded-xl font-bold flex justify-center items-center gap-2 cursor-pointer text-sm border border-dark-green/20"
+                    >
+                      ✏️ Edit Frame
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-      </main>
+        </main>
       )}
 
       {/* Footer */}
