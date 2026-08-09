@@ -299,6 +299,143 @@ export const downloadImageInFormat = async (dataUrl, targetFormat = 'png', filen
   }
 };
 
+/**
+ * Best Pre-set Caption for X (Twitter)
+ */
+export const DEFAULT_SHARE_CAPTION = `🚀 Ready to build in paradise! Just generated my candidate profile picture for Hackers House Goa 2026 🌴💻✨\n\nSee you in Goa! 🌊🦀 #FrameInGoa #HHGoa2026 #HackersHouseGoa #BuildInGoa`;
+
+/**
+ * Convert a base64 data URL to a Blob
+ */
+export function dataUrlToBlob(dataUrl) {
+  if (!dataUrl) return null;
+  const parts = dataUrl.split(',');
+  const mimeMatch = parts[0].match(/:(.*?);/);
+  const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+  const byteString = atob(parts[1]);
+  const arrayBuffer = new ArrayBuffer(byteString.length);
+  const uint8Array = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < byteString.length; i++) {
+    uint8Array[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([arrayBuffer], { type: mime });
+}
+
+/**
+ * Convert a base64 data URL to a File object
+ */
+export function dataUrlToFile(dataUrl, fileName) {
+  const blob = dataUrlToBlob(dataUrl);
+  if (!blob) return null;
+  return new File([blob], fileName, { type: blob.type });
+}
+
+/**
+ * Convert a base64 data URL to a PNG blob and copy to system clipboard
+ */
+export async function copyImageToClipboard(dataUrl) {
+  if (!dataUrl) return false;
+  try {
+    const parts = dataUrl.split(',');
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+    const byteString = atob(parts[1]);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([arrayBuffer], { type: mime });
+
+    let pngBlob = blob;
+    if (mime !== 'image/png') {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = dataUrl;
+      });
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth || 1200;
+      canvas.height = img.naturalHeight || 1200;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      pngBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+    }
+
+    await navigator.clipboard.write([
+      new ClipboardItem({ 'image/png': pngBlob }),
+    ]);
+    return true;
+  } catch (err) {
+    console.error('Failed to copy image to clipboard:', err);
+    return false;
+  }
+}
+
+/**
+ * Executes Share to X:
+ * - Mobile: Uses Web Share API (opens native X app directly with pre-set caption and image attached)
+ * - Desktop: Opens new tab to X with pre-set caption + auto copies image to clipboard (or downloads)
+ */
+export async function executeShareToX({ dataUrl, exportFileType = 'png', caption = DEFAULT_SHARE_CAPTION, onToast }) {
+  if (!dataUrl) return false;
+
+  const ext = exportFileType === 'jpeg' ? 'jpg' : 'png';
+  const fileName = `HH_Goa_2026_PFP.${ext}`;
+
+  // Strategy 1: Web Share API with file support (Mobile application direct share)
+  if (navigator.share && navigator.canShare) {
+    const file = dataUrlToFile(dataUrl, fileName);
+    if (file) {
+      const shareData = {
+        text: caption,
+        files: [file],
+      };
+
+      if (navigator.canShare(shareData)) {
+        try {
+          await navigator.share(shareData);
+          if (onToast) onToast('shared');
+          return true;
+        } catch (shareErr) {
+          if (shareErr.name === 'AbortError') {
+            return false;
+          }
+          console.warn('Web Share failed, using desktop fallback:', shareErr);
+        }
+      }
+    }
+  }
+
+  // Strategy 2: Desktop / Web — Open X intent in a new tab + copy image to clipboard
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(caption)}`;
+
+  // Open X compose window in a new tab immediately
+  const xWindow = window.open(tweetUrl, '_blank', 'noopener,noreferrer');
+
+  // Copy image to clipboard so user can press Ctrl+V / ⌘+V directly into X
+  const copied = await copyImageToClipboard(dataUrl);
+
+  if (copied) {
+    if (onToast) onToast('copied');
+  } else {
+    // If clipboard copy fails or is unsupported, download image automatically
+    downloadBase64Image(dataUrl, fileName);
+    if (onToast) onToast('downloading');
+  }
+
+  if (xWindow) {
+    xWindow.focus();
+  }
+
+  return true;
+}
+
+
 
 
 

@@ -6,85 +6,36 @@ import PreviewCanvas from './components/PreviewCanvas';
 import ActionControls from './components/ActionControls';
 import DotMatrixBackground from './components/DotMatrixBackground';
 import { useAppStore } from './store/useAppStore';
-import { downloadBase64Image, downloadImageInFormat } from './utils/exportHelper';
-
-const SHARE_CAPTION = 'Just generated my candidate framed profile picture for Hackers House Goa 2026! 🌴💻 #FrameInGoa #HHGoa2026';
-
-function dataUrlToBlob(dataUrl) {
-  const parts = dataUrl.split(',');
-  const mime = parts[0].match(/:(.*?);/)[1];
-  const byteString = atob(parts[1]);
-  const arrayBuffer = new ArrayBuffer(byteString.length);
-  const uint8Array = new Uint8Array(arrayBuffer);
-  for (let i = 0; i < byteString.length; i++) {
-    uint8Array[i] = byteString.charCodeAt(i);
-  }
-  return new Blob([arrayBuffer], { type: mime });
-}
-
-function dataUrlToFile(dataUrl, fileName) {
-  const blob = dataUrlToBlob(dataUrl);
-  return new File([blob], fileName, { type: blob.type });
-}
+import {
+  downloadBase64Image,
+  downloadImageInFormat,
+  DEFAULT_SHARE_CAPTION,
+  executeShareToX,
+} from './utils/exportHelper';
 
 export default function App() {
   const canvasRef = useRef(null);
   const { activeTab, setActiveTab, generatedBase64, exportFileType } = useAppStore();
   const [successShareToast, setSuccessShareToast] = useState(null);
+  const [copiedCaption, setCopiedCaption] = useState(false);
 
   const handleShareToX = async () => {
-    // If we have the generated image, try Web Share API first (mobile)
-    if (generatedBase64) {
-      const ext = exportFileType === 'jpeg' ? 'jpg' : 'png';
-      const fileName = `HH_Goa_2026_PFP.${ext}`;
+    if (!generatedBase64) return;
+    await executeShareToX({
+      dataUrl: generatedBase64,
+      exportFileType,
+      caption: DEFAULT_SHARE_CAPTION,
+      onToast: (toastType) => {
+        setSuccessShareToast(toastType);
+        setTimeout(() => setSuccessShareToast(null), 6000);
+      },
+    });
+  };
 
-      if (navigator.share && navigator.canShare) {
-        const file = dataUrlToFile(generatedBase64, fileName);
-        const shareData = { text: SHARE_CAPTION, files: [file] };
-
-        if (navigator.canShare(shareData)) {
-          try {
-            await navigator.share(shareData);
-            return;
-          } catch (err) {
-            if (err.name === 'AbortError') return;
-          }
-        }
-      }
-
-      // Desktop fallback: copy image to clipboard + open X
-      try {
-        const blob = dataUrlToBlob(generatedBase64);
-        let pngBlob = blob;
-        if (blob.type === 'image/jpeg') {
-          const img = new Image();
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = generatedBase64;
-          });
-          const canvas = document.createElement('canvas');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0);
-          pngBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
-        }
-        await navigator.clipboard.write([
-          new ClipboardItem({ 'image/png': pngBlob }),
-        ]);
-        setSuccessShareToast('copied');
-        setTimeout(() => setSuccessShareToast(null), 5000);
-      } catch (err) {
-        console.error('Clipboard copy failed:', err);
-        setSuccessShareToast('fallback');
-        setTimeout(() => setSuccessShareToast(null), 5000);
-      }
-    }
-
-    // Open X compose with pre-filled caption
-    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_CAPTION)}`;
-    window.open(tweetUrl, '_blank', 'noopener,noreferrer');
+  const handleCopyCaption = () => {
+    navigator.clipboard.writeText(DEFAULT_SHARE_CAPTION);
+    setCopiedCaption(true);
+    setTimeout(() => setCopiedCaption(false), 3000);
   };
 
   return (
@@ -97,18 +48,22 @@ export default function App() {
         <div className="toast fixed top-4 left-1/2 -translate-x-1/2 z-[9999] max-w-xs text-center animate-fade-in-up">
           {successShareToast === 'copied' && (
             <>
-              <span className="block text-yellow mb-1">✅ Image Copied!</span>
-              <span className="block font-normal text-xs">Paste (Ctrl+V / ⌘+V) it into your X post.</span>
+              <span className="block text-yellow mb-1 font-bold">✅ Image Copied & X Opened!</span>
+              <span className="block font-normal text-xs">Press Ctrl+V (⌘+V) in the X tab to paste your photo.</span>
             </>
           )}
-          {successShareToast === 'fallback' && (
+          {successShareToast === 'downloading' && (
             <>
-              <span className="block text-yellow mb-1">📥 Download First</span>
-              <span className="block font-normal text-xs">Download your PFP first, then attach it to your X post.</span>
+              <span className="block text-yellow mb-1 font-bold">📥 Image Downloaded & X Opened!</span>
+              <span className="block font-normal text-xs">Attach the downloaded file to your X post.</span>
             </>
+          )}
+          {successShareToast === 'shared' && (
+            <span className="block text-yellow font-bold">✅ Shared to X successfully!</span>
           )}
         </div>
       )}
+
 
       {/* Main Content Area */}
       {activeTab === 'landing' ? (
@@ -323,7 +278,7 @@ export default function App() {
                   )}
 
                   {/* Info Card */}
-                  <div className="w-full bg-cream rounded-xl p-4 mb-6 flex items-center justify-between gap-4">
+                  <div className="w-full bg-cream rounded-xl p-4 mb-4 flex items-center justify-between gap-4">
                     <div className="flex flex-col text-left">
                       <span className="text-xs font-bold text-dark-green block mb-1">
                         PFP Frame: HH GOA 2026
@@ -337,6 +292,26 @@ export default function App() {
                     </div>
                     <div className="text-2xl">🏅</div>
                   </div>
+
+                  {/* Preset X Caption Card */}
+                  <div className="w-full bg-cream/70 rounded-xl p-3.5 mb-6 border border-dark-green/10 text-left space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-dark-green uppercase tracking-wide flex items-center gap-1">
+                        <span>💬</span> Preset X Caption
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleCopyCaption}
+                        className="text-[10px] font-bold px-2.5 py-1 bg-dark-green/10 hover:bg-dark-green/20 text-dark-green rounded-md transition-colors cursor-pointer"
+                      >
+                        {copiedCaption ? '✅ Copied!' : '📋 Copy Text'}
+                      </button>
+                    </div>
+                    <p className="text-xs text-dark-gray whitespace-pre-line font-medium leading-relaxed bg-white/60 p-2.5 rounded-lg border border-dark-green/5">
+                      {DEFAULT_SHARE_CAPTION}
+                    </p>
+                  </div>
+
 
                   {/* Actions */}
                   <div className="flex flex-col w-full gap-3">

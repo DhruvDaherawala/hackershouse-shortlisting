@@ -1,81 +1,14 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
 import { useAppStore } from '../store/useAppStore';
-import { renderComponentToBase64, downloadBase64Image, downloadImageInFormat } from '../utils/exportHelper';
-
-/**
- * Convert a base64 data URL to a Blob
- */
-function dataUrlToBlob(dataUrl) {
-  if (!dataUrl) return null;
-  const parts = dataUrl.split(',');
-  const mimeMatch = parts[0].match(/:(.*?);/);
-  const mime = mimeMatch ? mimeMatch[1] : 'image/png';
-  const byteString = atob(parts[1]);
-  const arrayBuffer = new ArrayBuffer(byteString.length);
-  const uint8Array = new Uint8Array(arrayBuffer);
-  for (let i = 0; i < byteString.length; i++) {
-    uint8Array[i] = byteString.charCodeAt(i);
-  }
-  return new Blob([arrayBuffer], { type: mime });
-}
-
-/**
- * Convert a base64 data URL to a File object
- */
-function dataUrlToFile(dataUrl, fileName) {
-  const blob = dataUrlToBlob(dataUrl);
-  if (!blob) return null;
-  return new File([blob], fileName, { type: blob.type });
-}
-
-/**
- * Convert a base64 data URL to a PNG blob and copy to clipboard
- */
-async function copyImageToClipboard(dataUrl) {
-  if (!dataUrl) return false;
-  try {
-    const parts = dataUrl.split(',');
-    const mimeMatch = parts[0].match(/:(.*?);/);
-    const mime = mimeMatch ? mimeMatch[1] : 'image/png';
-    const byteString = atob(parts[1]);
-    const arrayBuffer = new ArrayBuffer(byteString.length);
-    const uint8Array = new Uint8Array(arrayBuffer);
-    for (let i = 0; i < byteString.length; i++) {
-      uint8Array[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([arrayBuffer], { type: mime });
-
-    let pngBlob = blob;
-    if (mime !== 'image/png') {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
-        img.src = dataUrl;
-      });
-      const canvas = document.createElement('canvas');
-      canvas.width = img.naturalWidth || 1200;
-      canvas.height = img.naturalHeight || 1200;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
-      pngBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
-    }
-
-    await navigator.clipboard.write([
-      new ClipboardItem({ 'image/png': pngBlob }),
-    ]);
-    return true;
-  } catch (err) {
-    console.error('Failed to copy image to clipboard:', err);
-    return false;
-  }
-}
-
-const SHARE_CAPTION = 'Just generated my candidate framed profile picture for Hackers House Goa 2026! 🌴💻 #FrameInGoa #HHGoa2026';
+import {
+  renderComponentToBase64,
+  downloadBase64Image,
+  downloadImageInFormat,
+  DEFAULT_SHARE_CAPTION,
+  executeShareToX,
+  copyImageToClipboard,
+} from '../utils/exportHelper';
 
 export default function ActionControls({ canvasRef }) {
   const {
@@ -162,16 +95,16 @@ export default function ActionControls({ canvasRef }) {
   };
 
   /**
-   * Primary share handler — uses the best available method:
-   * 1. Web Share API with file (mobile) — shares actual image to X/any app
-   * 2. Desktop fallback — opens share modal with PNG and JPG download/share options
+   * Primary Share to X handler:
+   * 1. On Mobile: Invokes native share sheet with pre-set caption + image (opens X app directly)
+   * 2. On Desktop: Opens new tab to X compose with pre-set caption & auto-copies image to clipboard
    */
   const handleShareToX = async () => {
     setIsSharing(true);
     setShareToast(null);
 
     try {
-      const imageData = await handleGenerate();
+      const imageData = generatedBase64 || (await handleGenerate());
       if (!imageData) {
         setShareToast('error');
         setTimeout(() => setShareToast(null), 3000);
@@ -179,59 +112,39 @@ export default function ActionControls({ canvasRef }) {
         return;
       }
 
-      const ext = exportFileType === 'jpeg' ? 'jpg' : 'png';
-      const fileName = `HH_Goa_2026_PFP.${ext}`;
+      await executeShareToX({
+        dataUrl: imageData,
+        exportFileType,
+        caption: DEFAULT_SHARE_CAPTION,
+        onToast: (toastType) => {
+          setShareToast(toastType);
+          setTimeout(() => setShareToast(null), 6000);
+        },
+      });
 
-      // Strategy 1: Web Share API with file support (works great on mobile)
-      if (navigator.share && navigator.canShare) {
-        const file = dataUrlToFile(imageData, fileName);
-        if (file) {
-          const shareData = {
-            text: SHARE_CAPTION,
-            files: [file],
-          };
-
-          if (navigator.canShare(shareData)) {
-            try {
-              await navigator.share(shareData);
-              setShareToast('shared');
-              setTimeout(() => setShareToast(null), 3000);
-              setIsSharing(false);
-              return;
-            } catch (shareErr) {
-              if (shareErr.name === 'AbortError') {
-                setIsSharing(false);
-                return;
-              }
-            }
-          }
-        }
-      }
-
-      // Strategy 2: Desktop fallback — show share modal with options
-      setShowShareModal(true);
-      setIsSharing(false);
-
+      // Transition to success screen tab
+      setActiveTab('success');
     } catch (err) {
       console.error('Share failed:', err);
       setShareToast('error');
       setTimeout(() => setShareToast(null), 3000);
+    } finally {
       setIsSharing(false);
     }
   };
 
   /**
-   * Desktop share: Copy image + open X compose
+   * Desktop share fallback: Copy image + open X compose
    */
   const handleDesktopShareToX = async () => {
-    const imageData = generatedBase64 || await handleGenerate();
+    const imageData = generatedBase64 || (await handleGenerate());
     if (!imageData) return;
 
     // Copy image to clipboard
     const copied = await copyImageToClipboard(imageData);
 
-    // Open X compose with pre-filled text
-    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_CAPTION)}`;
+    // Open X compose with pre-filled caption
+    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(DEFAULT_SHARE_CAPTION)}`;
     window.open(tweetUrl, '_blank', 'noopener,noreferrer');
 
     if (copied) {
@@ -249,7 +162,7 @@ export default function ActionControls({ canvasRef }) {
    * Copy image to clipboard only
    */
   const handleCopyImage = async () => {
-    const imageData = generatedBase64 || await handleGenerate();
+    const imageData = generatedBase64 || (await handleGenerate());
     if (!imageData) return;
     const copied = await copyImageToClipboard(imageData);
     if (copied) {
@@ -258,6 +171,7 @@ export default function ActionControls({ canvasRef }) {
       setTimeout(() => setShareToast(null), 3000);
     }
   };
+
 
   return (
     <div className="w-full max-w-sm space-y-4 relative">
@@ -342,7 +256,7 @@ export default function ActionControls({ canvasRef }) {
                   if (generatedBase64) {
                     downloadImageInFormat(generatedBase64, 'png', 'HH_Goa_2026_PFP.png');
                   }
-                  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_CAPTION)}`;
+                  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(DEFAULT_SHARE_CAPTION)}`;
                   window.open(tweetUrl, '_blank', 'noopener,noreferrer');
                   setShareToast('downloading');
                   setShowShareModal(false);
@@ -360,7 +274,7 @@ export default function ActionControls({ canvasRef }) {
                   if (generatedBase64) {
                     downloadImageInFormat(generatedBase64, 'jpeg', 'HH_Goa_2026_PFP.jpg');
                   }
-                  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_CAPTION)}`;
+                  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(DEFAULT_SHARE_CAPTION)}`;
                   window.open(tweetUrl, '_blank', 'noopener,noreferrer');
                   setShareToast('downloading');
                   setShowShareModal(false);
